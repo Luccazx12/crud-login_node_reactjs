@@ -4,7 +4,7 @@ import Rotas from './Rotas';
 const App = () => {
   return (
     <div className="App">
-      <Rotas />
+      <Rotas/>
     </div>
   );
 }
