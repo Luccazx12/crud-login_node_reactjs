@@ -1,10 +1,10 @@
-import './App.css';
-import Rotas from './Rotas';
+import Rotas from './Router';
+import  './App.css';
 
 const App = () => {
   return (
     <div className="App">
-      <Rotas/>
+      <Rotas />
     </div>
   );
 }

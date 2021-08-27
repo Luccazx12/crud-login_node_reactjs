@@ -83,7 +83,7 @@ const conn = mysql.createConnection({
 	host: "localhost",
 	port: 3307,
 	user: "root",
-	database: "crud777",
+	database: "senai115",
   });
   
   // connect to database
@@ -94,16 +94,16 @@ const conn = mysql.createConnection({
   
   //Rotas MYSQL
 
-  //insert a record
-  router.post("/clientes", upload.single('imagem_cliente'), (req, res, next) => {
+// insert a record
+  router.post("/register", (req, res) => {
 	let id = req.body.id;
 	let nome = req.body.nome;
-	let cpf = req.body.cpf;
-    const imagem = req.file.path; 
+	let senha = req.body.senha;
+	let ra = req.body.ra;
 
 	const sqlInsert =
-	  "INSERT INTO clientes (id, nome, cpf, imagem_cliente) VALUES (?, ?, ?, ?)";
-	conn.query(sqlInsert, [id, nome, cpf, imagem], (err, result) => {
+	"INSERT INTO usuarios (id, nome, senha, ra) VALUES (?, ?, ?, ?)";
+	conn.query(sqlInsert, [id, nome, senha, ra], (err, result) => {
 	  if (err) console.log(err)
 
 	//   res.send(
@@ -115,90 +115,122 @@ const conn = mysql.createConnection({
 	//   );
 	  console.log(result);
 	});
-	let query2 = conn.query("SET @count = 0;");
-	let query3 = conn.query(
-	  "UPDATE clientes SET clientes.id = @count:= @count+1;"
-	);
-  });
-  
-  // show all records
-  router.get("/clientes", (req, res) => {
-	let sql = "SELECT * FROM clientes;";
-	let query = conn.query(sql, (err, result) => {
-	  if (err) throw err;
-	  res.send(JSON.stringify({ status: 200, error: null, response: result }));
-	});
-	let query2 = conn.query("SET @count = 0;");
-	let query3 = conn.query(
-	  "UPDATE clientes SET clientes.id = @count:= @count+1;"
-	);
-  });
-  
-  // show a single record
-  router.get("/clientes/:id", (req, res) => {
-	let sql = "SELECT * FROM clientes WHERE id=" + req.params.id;
-	let query = conn.query(sql, (err, result) => {
-	  if (err) throw err;
-	  res.send(JSON.stringify({ status: 200, error: null, response: result }));
-	});
-  });
-  
-  // delete the record
-  router.delete("/clientes/:id", (req, res) => {
-	let sql = "DELETE FROM clientes WHERE id=" + req.params.id + "";
-	let query = conn.query(sql, (err, result) => {
-	  if (err) throw err;
-	  res.send(
-		JSON.stringify({
-		  status: 200,
-		  error: null,
-		  response: "Registro deletado com sucesso!",
-		})
-	  );
-	});
-	let query2 = conn.query("SET @count = 0;");
-	let query3 = conn.query(
-	  "UPDATE clientes SET clientes.id = @count:= @count+1;"
-	);
   });
 
-//delete all records
-  router.delete("/clientes", (req, res) => {
-	let sql = "TRUNCATE TABLE clientes";
+
+
+
+
+
+
+
+
+
+  //insert a record
+//   router.post("/usuarios", upload.single('imagem_cliente'), (req, res, next) => {
+// 	let id = req.body.id;
+// 	let nome = req.body.nome;
+// 	let senha = req.body.senha;
+// 	let ra = req.body.ra;
+//     const imagem = req.file.path; 
+
+// 	const sqlInsert =
+// 	  "INSERT INTO usuarios (id, nome, senha, ra , imagem_cliente) VALUES (?, ?, ?, ?)";
+// 	conn.query(sqlInsert, [id, nome, cpf, imagem], (err, result) => {
+// 	  if (err) console.log(err)
+
+// 	//   res.send(
+// 	// 	JSON.stringify({
+// 	// 	  status: 200,
+// 	// 	  error: null,
+// 	// 	  response: "New Record is Added successfully",
+// 	// 	})
+// 	//   );
+// 	  console.log(result);
+// 	});
+// 	let query2 = conn.query("SET @count = 0;");
+// 	let query3 = conn.query(
+// 	  "UPDATE usuarios SET usuarios.id = @count:= @count+1;"
+// 	);
+//   });
+  
+  // show all records
+  router.get("/get", (req, res) => {
+	let sql = "SELECT * FROM usuarios;";
 	let query = conn.query(sql, (err, result) => {
 	  if (err) throw err;
-	  res.send(
-		JSON.stringify({
-		  status: 200,
-		  error: null,
-		  response: "Todos os registros foram deletados com sucesso!",
-		})
-	  );
+	  res.send(JSON.stringify({ status: 200, error: null, response: result }));
 	});
 	let query2 = conn.query("SET @count = 0;");
 	let query3 = conn.query(
-	  "UPDATE clientes SET clientes.id = @count:= @count+1;"
+	  "UPDATE usuarios SET usuarios.id = @count:= @count+1;"
 	);
   });
   
-  // update the Record
-  router.put("/clientes", (req, res) => {
-	let sql =
-	  "UPDATE clientes SET nome='" +
-	  req.body.nome +
-	  "', cpf='" +
-	  req.body.cpf +
-	  "' WHERE id=" +
-	  req.body.id;
-	let query = conn.query(sql, (err, result) => {
-	  if (err) throw err;
-	  res.send(
-		JSON.stringify({
-		  status: 200,
-		  error: null,
-		  response: "Registro atualizado com sucesso!",
-		})
-	  );
-	});
-  });
+//   // show a single record
+//   router.get("/usuarios/:id", (req, res) => {
+// 	let sql = "SELECT * FROM usuarios WHERE id=" + req.params.id;
+// 	let query = conn.query(sql, (err, result) => {
+// 	  if (err) throw err;
+// 	  res.send(JSON.stringify({ status: 200, error: null, response: result }));
+// 	});
+//   });
   
+//   // delete the record
+//   router.delete("/usuarios/:id", (req, res) => {
+// 	let sql = "DELETE FROM usuarios WHERE id=" + req.params.id + "";
+// 	let query = conn.query(sql, (err, result) => {
+// 	  if (err) throw err;
+// 	  res.send(
+// 		JSON.stringify({
+// 		  status: 200,
+// 		  error: null,
+// 		  response: "Registro deletado com sucesso!",
+// 		})
+// 	  );
+// 	});
+// 	let query2 = conn.query("SET @count = 0;");
+// 	let query3 = conn.query(
+// 	  "UPDATE usuarios SET usuarios.id = @count:= @count+1;"
+// 	);
+//   });
+
+// //delete all records
+//   router.delete("/usuarios", (req, res) => {
+// 	let sql = "TRUNCATE TABLE usuarios";
+// 	let query = conn.query(sql, (err, result) => {
+// 	  if (err) throw err;
+// 	  res.send(
+// 		JSON.stringify({
+// 		  status: 200,
+// 		  error: null,
+// 		  response: "Todos os registros foram deletados com sucesso!",
+// 		})
+// 	  );
+// 	});
+// 	let query2 = conn.query("SET @count = 0;");
+// 	let query3 = conn.query(
+// 	  "UPDATE usuarios SET usuarios.id = @count:= @count+1;"
+// 	);
+//   });
+  
+//   // update the Record
+//   router.put("/usuarios", (req, res) => {
+// 	let sql =
+// 	  "UPDATE usuarios SET nome='" +
+// 	  req.body.nome +
+// 	  "', cpf='" +
+// 	  req.body.cpf +
+// 	  "' WHERE id=" +
+// 	  req.body.id;
+// 	let query = conn.query(sql, (err, result) => {
+// 	  if (err) throw err;
+// 	  res.send(
+// 		JSON.stringify({
+// 		  status: 200,
+// 		  error: null,
+// 		  response: "Registro atualizado com sucesso!",
+// 		})
+// 	  );
+// 	});
+//   });
