@@ -11,7 +11,7 @@ const Rotas = () => (
             <Route exact path='/gerencia' component={ Gerencia } />
             <Route exact path='/perfil' component={ Perfil } />
             <Route exact path='/' component={ Login } />
-            <Route exact path ="*" element={<h1>404</h1>} />
+            {/* <Route exact path ="*" element={<h1>404</h1>} /> */}
         </Switch>
     </BrowserRouter>
 );

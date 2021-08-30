@@ -13,10 +13,7 @@ import {
 } from "react-bootstrap";
   
 
-export default function Registration() {
-  const [usernameReg, setUsernameReg] = useState("");
-  const [passwordReg, setPasswordReg] = useState("");
-
+export default function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 

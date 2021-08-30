@@ -14,10 +14,10 @@ connection.connect(function(err) {
 });
 
 function createTable(conn){
-    const sql = 'CREATE TABLE IF NOT EXISTS users (id int NOT NULL AUTO_INCREMENT, usuario varchar(100) NOT NULL, password varchar(20) not null,cpf char(11) NOT NULL, PRIMARY KEY (id));';
+    const sql = 'CREATE TABLE IF NOT EXISTS users (id int NOT NULL AUTO_INCREMENT, username varchar(20) NOT NULL, password varchar(500) not null,cpf char(14) NOT NULL, departament varchar(20), gerencia tinyint(1) DEFAULT 0, image_user varchar(100), PRIMARY KEY (id));';
     conn.query(sql, function(error, result, fields){
         if(error) return console.log(error);
-        console.log("A tabela clientes foi criada")
+        console.log("A tabela de usuários foi criada")
     });
 }
 
