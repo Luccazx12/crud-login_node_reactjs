@@ -1,4 +1,5 @@
 import React from "react";
+import "./index.css";
 import {
   Container,
   Row,
@@ -6,21 +7,24 @@ import {
   FormGroup,
   FormControl,
   FormLabel,
-  FormFile,
   Button,
   Alert,
   Table,
 } from "react-bootstrap";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import { cpfMask } from "../../components/CpfMask/index.js";
+import Select from "../../components/Select/index.js";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      nome: "",
-      senha: "",
-      ra: "",
+      username: "",
+      password: "",
+      cpf: "",
+      selected: "",
+      data: "",
       records: [],
       showAlert: false,
       alertMsg: "",
@@ -28,20 +32,37 @@ class App extends React.Component {
     };
   }
 
+  handleClick = e => {
+    this.props.history.push("/perfil");
+  };
+
   handleChange = (evt) => {
     this.setState({
-      [evt.target.name]: evt.target.value,
+      [evt.target.name]: evt.target.value
     });
+  };
+
+  cpfMask = (evt) => {
+    this.setState({
+      cpf: cpfMask(evt.target.value)
+    })
+  }
+
+  handleFileUpload  = (e) => {
+    const data = { ...this.state.data };
+    data[e.currentTarget.name] = e.currentTarget.value;
+    this.setState({ data });
   };
 
   componentDidMount() {
     this.fetchAllRecord();
   }
+
   // fetch all Records
   fetchAllRecord = () => {
     var headers = new Headers();
     headers.append("Content-Type", "application/json");
-    fetch("http://localhost:3002/register/", {
+    fetch("http://localhost:3002/users/", {
       method: "GET",
       headers: headers,
     })
@@ -57,60 +78,9 @@ class App extends React.Component {
       });
   };
 
-  // -> Mudei o método de adicionar para um form/data, por isso não precisa mais do fetch com os setState
-
-  // // add a record
-  // addRecord = () => {
-  //   var myHeaders = new Headers();
-  //   myHeaders.append("Content-Type", "multipart/form-data; boundary=something");
-  //   const imagem_cliente = document.getElementById("imagem_cliente").files[0];
-  //   var body = JSON.stringify({ nome: this.state.nome, ra: this.state.ra });
-  //   fetch("http://localhost:3002/clientes/", {
-  //     method: "POST",
-  //     headers: myHeaders,
-  //     body: body + `${imagem_cliente}`,
-  //   })
-  //     .then((response) => response.json())
-  //     .then((result) => {
-  //       console.log(result);
-  //       this.setState({
-  //         id: "",
-  //         nome: "",
-  //         ra: "",
-  //         showAlert: true,
-  //         alertMsg: result.response,
-  //         alertType: "sucess",
-  //         update: false,
-  //       });
-  //       this.fetchAllRecord();
-  //     });
-  // };
-
-  //    tentativa de submit do form com atualização do map (fetch com metodo get)
-  // sem ter que clicar no botão read e fazer a requisição get. -> fail
-  // acaba que a função fetchAllRecord é iniciada antes da validação do submit, não retornando
-  // o registro certo
-
-  // submitbutton = () => {
-  //   let button = document.getElementById("create-btn");
-  //   let input = document.getElementById("nome");
-  //   let ra = document.getElementById("ra");
-  //   let img = document.getElementById("imagem_cliente");
-  //   if (
-  //     input.checkValidity() &&
-  //     ra.checkValidity() &&
-  //     img.checkValidity() === true
-  //   ) {
-  //     button.form.submit();
-        //<p> do código ganha classe fadeout (usar como msg de insert)
-  //   }
-  //   // else { alert("Preencha todos os campos!"); }
-  //   this.fetchAllRecord();
-  // };
-
   //view sigle data to edit
   editRecord = (id) => {
-    fetch("http://localhost:3002/register/" + id, {
+    fetch("http://localhost:3002/users/id/" + id, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -120,11 +90,25 @@ class App extends React.Component {
         this.setState({
           id: id,
           update: true,
-          nome: result.response[0].nome,
-          senha: result.response[0].senha,
-          ra: result.response[0].ra,
-          imagem_cliente: result.response[0].imagem_cliente,
+          username: result.response[0].username,
+          password: result.response[0].password,
+          cpf: result.response[0].cpf,
+          selected: result.response[0].departament,
+          data: result.response[0].image_user,
         });
+
+        //Pensando sobre como redirecionar para a página com os dados corretos, eles ficariam da seguinte forma: result.response[0].obj pois só
+        //será feito o select daquele ID. O problema é realizar essa troca de informações, redirecionar as informações corretas quando clicado
+        //em um registro da tabela...
+        // return(
+        //   <div className="form">
+        //       <p>{result.response[0].username}</p>
+        //       {result.response[0].password}
+        //       {result.response[0].cpf}
+        //       {result.response[0].departament}
+        //       {result.response[0].image_user}
+        //   </div>
+        // )
       })
       .catch((error) => console.log("error", error));
   };
@@ -136,12 +120,14 @@ class App extends React.Component {
 
     var body = JSON.stringify({
       id: this.state.id,
-      nome: this.state.nome,
-      senha: this.state.senha,
-      ra: this.state.ra,
+      username: this.state.username,
+      password: this.state.password,
+      cpf: this.state.cpf,
+      selected: this.state.selected,
+      data: this.state.data,
     });
 
-    fetch("http://localhost:3002/register/", {
+    fetch("http://localhost:3002/users/", {
       method: "PUT",
       headers: myHeaders,
       body: body,
@@ -154,8 +140,11 @@ class App extends React.Component {
           alertType: "sucess",
           update: false,
           id: "",
-          nome: "",
-          ra: "",
+          username: "",
+          password: "",
+          cpf: "",
+          selected: "",
+          data: ""
         });
         this.fetchAllRecord();
       })
@@ -168,7 +157,7 @@ class App extends React.Component {
       "Tem certeza que deseja apagar esse registro?"
     );
     if (confirm === true) {
-      fetch("http://localhost:3002/register/" + id, {
+      fetch("http://localhost:3002/users/id/" + id, {
         method: "DELETE",
       })
         .then((response) => response.json())
@@ -190,7 +179,7 @@ class App extends React.Component {
       'Tem certeza que deseja apagar todos os registros? Digite "SIM" para confirmar'
     );
     if (confirm === "SIM" || confirm === "Sim" || confirm === "sim") {
-      fetch("http://localhost:3002/register/", {
+      fetch("http://localhost:3002/users/", {
         method: "DELETE",
       })
         .then((response) => response.json())
@@ -228,54 +217,54 @@ class App extends React.Component {
             <Form
               className="formContent"
               encType="multipart/form-data"
-              action="http://localhost:3002/register/"
+              action="http://localhost:3002/users/"
               method="POST"
               id="form"
             >
-              <h2 className="h2 fadeIn first">Cadastro de Clientes</h2>
+              <h2 className="h2 fadeIn first">Registrar Usuários</h2>
               {/* <FormGroup className="fadeIn first">
                 <FormLabel className="formlabel">ID</FormLabel>
                 <FormControl type="text" name="id" placeholder="Insira o ID" onChange={this.handleChange} value={this.state.id} />
               </FormGroup> */}
 
               <FormGroup className="fadeIn second">
-                <FormLabel className="formlabel">Nome</FormLabel>
+                <FormLabel className="formlabel">Usuário</FormLabel>
                 <FormControl
                   required
                   type="text"
-                  id="nome"
-                  name="nome"
-                  placeholder="Insira o Nome"
+                  id="username"
+                  name="username"
+                  placeholder="Insira o usuário"
                   onChange={this.handleChange}
-                  value={this.state.nome}
+                  value={this.state.username}
                 />
               </FormGroup>
 
-              <FormGroup className="fadeIn second">
+              <FormGroup>
                 <FormLabel className="formlabel">Senha</FormLabel>
                 <FormControl
                   required
                   type="password"
-                  id="senha"
-                  name="senha"
+                  id="password"
+                  name="password"
                   placeholder="Insira a senha"
                   onChange={this.handleChange}
-                  value={this.state.senha}
+                  value={this.state.password}
                 />
               </FormGroup>
 
               <FormGroup className="fadeIn second" id="lastform">
-                <FormLabel className="formlabel">RA</FormLabel>
+                <FormLabel className="formlabel">CPF</FormLabel>
                 <FormControl
                   required
-                  minlength="14"
+                  minLength="14"
                   type="text"
-                  id="ra"
-                  name="ra"
-                  placeholder="Insira o RA"
-                  onChange={this.handleChange}
-                  value={this.state.ra}
-                  oninvalid="this.InvalidMsg(this)"
+                  id="cpf"
+                  name="cpf"
+                  placeholder="Insira o CPF"
+                  onChange={this.cpfMask}
+                  value={this.state.cpf}
+
                 />
               </FormGroup>
               {/* <input
@@ -286,16 +275,21 @@ class App extends React.Component {
                 name="imagem_cliente"
               /> */}
 
-              {/* <FormGroup controlId="formFileSm" className="">
-                <FormFile
+              
+
+              <Form.Group className="mb-3">
+                <Form.Control size="sm"
                   required
                   accept="image/*"
                   type="file"
                   className="fadeIn fourth"
                   id="imagem_cliente"
-                  name="imagem_cliente"
-                />
-              </FormGroup> */}
+                  name="imagem_cliente" 
+                  onChange={this.handleFileUpload}
+                  />
+              </Form.Group>
+
+              <Select />
 
               <div>
                 <Button
@@ -303,11 +297,11 @@ class App extends React.Component {
                   id="edit-btn"
                   onClick={this.fetchAllRecord}
                 >
-                  Read
+                  Ler
                 </Button>
                 {this.state.update === true ? (
                   <Button className="button" onClick={this.updateRecord}>
-                    Update
+                    Atualizar
                   </Button>
                 ) : (
                   <Button
@@ -316,7 +310,7 @@ class App extends React.Component {
                     className="button fadeIn fourth"
                     id="create-btn"
                   >
-                    Create
+                    Registrar
                   </Button>
                 )}
                 <Button
@@ -324,7 +318,7 @@ class App extends React.Component {
                   id="delete-btn"
                   onClick={this.deleteRecords}
                 >
-                  Delete all
+                  Deletar todos
                 </Button>
               </div>
             </Form>
@@ -332,12 +326,13 @@ class App extends React.Component {
           {/*  All records */}
           <Row>
             <div className="general fadeIn fourth">
-              <Table hover size="sm" striped responsive className="table">
+              <Table responsive hover size="sm" striped className="table">
                 <thead>
                   <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">NOME</th>
-                    <th scope="col">ra</th>
+                    <th scope="col">USUÁRIO</th>
+                    <th scope="col">SENHA</th>
+                    <th scope="col">CPF</th>
+                    <th scope="col">DEPARTAMENTO</th>
                     <th scope="col">FOTO</th>
                     <th scope="col">EDITAR</th>
                     <th scope="col">DELETAR</th>
@@ -348,26 +343,29 @@ class App extends React.Component {
                     return (
                       <tr key={record.id}>
                         <td>
-                          <p className="p">{record.id}</p>
+                          <p className="p">{record.username}</p>
                         </td>
                         <td>
-                          <p className="p">{record.nome}</p>
+                          <p className="p">{record.password}</p>
                         </td>
                         <td>
-                          <p className="p">{record.ra}</p>
+                          <p className="p">{record.cpf}</p>
+                        </td>
+                        <td>
+                          <p className="p">{record.departament}</p>
                         </td>
                         <td>
                           <div className="divimg">
                             <a
                               href={
-                                "http://localhost:3002/" + record.imagem_cliente
+                                "http://localhost:3002/" + record.image_user
                               }
                               target="_newblank"
                             >
                               <img
                                 src={
                                   "http://localhost:3002/" +
-                                  record.imagem_cliente
+                                  record.image_user
                                 }
                                 alt="Imagem dos Clientes"
                               />

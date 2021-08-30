@@ -1,4 +1,14 @@
 import React, { useState } from "react";
+import "./index.css";
+import {
+    Container,
+    Row,
+    Form,
+    FormGroup,
+    FormControl,
+    FormLabel,
+    Button,
+} from "react-bootstrap";
 
 function App() {
 
@@ -7,20 +17,56 @@ function App() {
 
     return (
         <div className="App">
-            {/* <div classname="registration">
-                <h1>Registro</h1>
-                <label>Usuário</label>
-                <input type="text" onChange={(e)=> {setUsuarioReg(e.target.value)}} />
-                <label>Senha</label>
-                <input type="password" onChange={(e)=> {setSenhaReg(e.target.value)}} />
-                <button> Registrar</button>
-            </div> */}
-            <div className="login">
-                <h1>Login</h1>
-                <input type="text" placeholder="usuário..." />
-                <input type="password" placeholder="senha..." />
-                <button>Registrar</button>
-            </div>
+            <Container className="wrapper fadeinDown">
+                {/* Insert Form */}
+                <Row>
+                    <Form
+                        className="formContent"
+                        encType="multipart/form-data"
+                        action="http://localhost:3002/users/"
+                        method="POST"
+                        id="form"
+                    >
+                        <h2 className="h2 fadeIn first">Login</h2>
+                        {/* <FormGroup className="fadeIn first">
+                <FormLabel className="formlabel">ID</FormLabel>
+                <FormControl type="text" name="id" placeholder="Insira o ID" onChange={this.handleChange} value={this.state.id} />
+              </FormGroup> */}
+
+                        <FormGroup className="fadeIn second">
+                            <FormLabel className="formlabel">Usuário ou CPF</FormLabel>
+                            <FormControl
+                                required
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder="Insira o usuário"
+
+                            />
+                        </FormGroup>
+
+                        <FormGroup>
+                            <FormLabel className="formlabel">Senha</FormLabel>
+                            <FormControl
+                                required
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Insira a senha"
+                            />
+                        </FormGroup>
+                        <div>
+                            <Button
+                                type="submit"
+                                className="button fadeIn fourth"
+                                id="create-btn"
+                            >
+                                Logar
+                            </Button>
+                        </div>
+                    </Form>
+                </Row>
+            </Container>
         </div>
     );
 }

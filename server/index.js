@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 app.use(cors());
 const bodyParser = require('body-parser');
-const port = 3002; //porta padrão
+const port = 3002; 
 const mysql = require('mysql');
 const multer = require('multer');
 
@@ -12,6 +12,34 @@ const multer = require('multer');
 // const { validator } = require('cpf-cnpj-validator');
 // const Joi = require('@hapi/joi').extend(validator)
 
+
+// //CPF VALIDATOR ---------------------
+// // gera um número de cpf
+// const num = cpf.generate();
+// // #=> 25634428777
+
+// // verifica se é um número válido
+// cpf.isValid(num);
+// // #=> true
+
+// // formata o número gerado
+// cpf.format(num);
+// // #=> 256.344.287-77
+
+// const cnpjSchema = Joi.document().cnpj();
+// const cpfSchema = Joi.document().cpf();
+
+// // valida o CPF
+// cpfSchema.validate('54271113107');
+// // #=> true
+
+// // valida o CNPJ
+// cnpjSchema.validate('38313108000107');
+// // #=> true
+
+
+
+//UPLOAD DE IMAGENS
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		//cb(null, './uploads/');
@@ -26,37 +54,9 @@ const fileFilter = (req, file, cb) => {
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' ||  file.mimetype === 'image/jpg'){
 	  cb(null, true);
   } else {
-    cb(null, false);
+	cb(null, false);
   }
 }
-
-// //CPF VALIDATOR ---------------------
-// // gera um número de cpf
-// const num = cpf.generate();
-// // #=> 25634428777
- 
-// // verifica se é um número válido
-// cpf.isValid(num);
-// // #=> true
- 
-// // formata o número gerado
-// cpf.format(num);
-// // #=> 256.344.287-77
-
-// const cnpjSchema = Joi.document().cnpj();
-// const cpfSchema = Joi.document().cpf();
- 
-// // valida o CPF
-// cpfSchema.validate('54271113107');
-// // #=> true
- 
-// // valida o CNPJ
-// cnpjSchema.validate('38313108000107');
-// // #=> true
-
-
-
-//UPLOAD DE IMAGENS
 const upload = multer({ 
   storage: storage,
   limits: {
@@ -81,9 +81,9 @@ console.log('API funcionando!');
 
 const conn = mysql.createConnection({
 	host: "localhost",
-	port: 3307,
+	port: 3306,
 	user: "root",
-	database: "senai115",
+	database: "crud777",
   });
   
   // connect to database
@@ -94,16 +94,18 @@ const conn = mysql.createConnection({
   
   //Rotas MYSQL
 
-// insert a record
-  router.post("/register", (req, res) => {
+  //insert a record
+  router.post("/users", upload.single('imagem_cliente'), (req, res, next) => {
 	let id = req.body.id;
-	let nome = req.body.nome;
-	let senha = req.body.senha;
-	let ra = req.body.ra;
+	let username = req.body.username;
+	let password = req.body.password;
+	let cpf = req.body.cpf;
+	let select = req.body.select;
+    const imagem = req.file.path; 
 
 	const sqlInsert =
-	"INSERT INTO usuarios (id, nome, senha, ra) VALUES (?, ?, ?, ?)";
-	conn.query(sqlInsert, [id, nome, senha, ra], (err, result) => {
+	  "INSERT INTO users (id, username, password, cpf , departament, image_user) VALUES (?, ?, ?, ?, ?, ?)";
+	conn.query(sqlInsert, [id, username, password, cpf, select ,imagem], (err, result) => {
 	  if (err) console.log(err)
 
 	//   res.send(
@@ -116,121 +118,83 @@ const conn = mysql.createConnection({
 	  console.log(result);
 	});
   });
-
-
-
-
-
-
-
-
-
-
-  //insert a record
-//   router.post("/usuarios", upload.single('imagem_cliente'), (req, res, next) => {
-// 	let id = req.body.id;
-// 	let nome = req.body.nome;
-// 	let senha = req.body.senha;
-// 	let ra = req.body.ra;
-//     const imagem = req.file.path; 
-
-// 	const sqlInsert =
-// 	  "INSERT INTO usuarios (id, nome, senha, ra , imagem_cliente) VALUES (?, ?, ?, ?)";
-// 	conn.query(sqlInsert, [id, nome, cpf, imagem], (err, result) => {
-// 	  if (err) console.log(err)
-
-// 	//   res.send(
-// 	// 	JSON.stringify({
-// 	// 	  status: 200,
-// 	// 	  error: null,
-// 	// 	  response: "New Record is Added successfully",
-// 	// 	})
-// 	//   );
-// 	  console.log(result);
-// 	});
-// 	let query2 = conn.query("SET @count = 0;");
-// 	let query3 = conn.query(
-// 	  "UPDATE usuarios SET usuarios.id = @count:= @count+1;"
-// 	);
-//   });
   
   // show all records
-  router.get("/get", (req, res) => {
-	let sql = "SELECT * FROM usuarios;";
+  router.get("/users", (req, res) => {
+	let sql = "SELECT * FROM users;";
 	let query = conn.query(sql, (err, result) => {
 	  if (err) throw err;
 	  res.send(JSON.stringify({ status: 200, error: null, response: result }));
 	});
-	let query2 = conn.query("SET @count = 0;");
-	let query3 = conn.query(
-	  "UPDATE usuarios SET usuarios.id = @count:= @count+1;"
-	);
   });
   
-//   // show a single record
-//   router.get("/usuarios/:id", (req, res) => {
-// 	let sql = "SELECT * FROM usuarios WHERE id=" + req.params.id;
-// 	let query = conn.query(sql, (err, result) => {
-// 	  if (err) throw err;
-// 	  res.send(JSON.stringify({ status: 200, error: null, response: result }));
-// 	});
-//   });
+  // show a single record
+  router.get("/users/id/:id", (req, res) => {
+	let sql = "SELECT * FROM users WHERE id=" + req.params.id;
+	let query = conn.query(sql, (err, result) => {
+	  if (err) throw err;
+	  res.send(JSON.stringify({ status: 200, error: null, response: result }));
+	});
+  });
+  router.get("/users/username", (req, res) => {
+	let sql = `SELECT * FROM users WHERE username='${req.params.username}'`
+	let query = conn.query(sql, (err, result) => {
+	  if (err) throw err;
+	  res.send(JSON.stringify({ status: 200, error: null, response: result }));
+	});
+  });
   
-//   // delete the record
-//   router.delete("/usuarios/:id", (req, res) => {
-// 	let sql = "DELETE FROM usuarios WHERE id=" + req.params.id + "";
-// 	let query = conn.query(sql, (err, result) => {
-// 	  if (err) throw err;
-// 	  res.send(
-// 		JSON.stringify({
-// 		  status: 200,
-// 		  error: null,
-// 		  response: "Registro deletado com sucesso!",
-// 		})
-// 	  );
-// 	});
-// 	let query2 = conn.query("SET @count = 0;");
-// 	let query3 = conn.query(
-// 	  "UPDATE usuarios SET usuarios.id = @count:= @count+1;"
-// 	);
-//   });
+  // delete the record
+  router.delete("/users/id/:id", (req, res) => {
+	let sql = "DELETE FROM users WHERE id=" + req.params.id + "";
+	let query = conn.query(sql, (err, result) => {
+	  if (err) throw err;
+	  res.send(
+		JSON.stringify({
+		  status: 200,
+		  error: null,
+		  response: "Usuário deletado com sucesso!",
+		})
+	  );
+	});
+  });
 
-// //delete all records
-//   router.delete("/usuarios", (req, res) => {
-// 	let sql = "TRUNCATE TABLE usuarios";
-// 	let query = conn.query(sql, (err, result) => {
-// 	  if (err) throw err;
-// 	  res.send(
-// 		JSON.stringify({
-// 		  status: 200,
-// 		  error: null,
-// 		  response: "Todos os registros foram deletados com sucesso!",
-// 		})
-// 	  );
-// 	});
-// 	let query2 = conn.query("SET @count = 0;");
-// 	let query3 = conn.query(
-// 	  "UPDATE usuarios SET usuarios.id = @count:= @count+1;"
-// 	);
-//   });
+//delete all records
+  router.delete("/users", (req, res) => {
+	let sql = "TRUNCATE TABLE users";
+	let query = conn.query(sql, (err, result) => {
+	  if (err) throw err;
+	  res.send(
+		JSON.stringify({
+		  status: 200,
+		  error: null,
+		  response: "Todos os usuários foram deletados com sucesso!",
+		})
+	  );
+	});
+  });
   
-//   // update the Record
-//   router.put("/usuarios", (req, res) => {
-// 	let sql =
-// 	  "UPDATE usuarios SET nome='" +
-// 	  req.body.nome +
-// 	  "', cpf='" +
-// 	  req.body.cpf +
-// 	  "' WHERE id=" +
-// 	  req.body.id;
-// 	let query = conn.query(sql, (err, result) => {
-// 	  if (err) throw err;
-// 	  res.send(
-// 		JSON.stringify({
-// 		  status: 200,
-// 		  error: null,
-// 		  response: "Registro atualizado com sucesso!",
-// 		})
-// 	  );
-// 	});
-//   });
+  // update the Record
+  router.put("/users", (req, res) => {
+	let sql =
+	  "UPDATE users SET username='" +
+	  req.body.username +
+	  "', password='" +
+	  req.body.password +
+	  "', cpf='" +
+	  req.body.cpf +
+	  "', departament='" +
+	  req.body.select +
+	  "' WHERE id=" +
+	  req.body.id;
+	let query = conn.query(sql, (err, result) => {
+	  if (err) throw err;
+	  res.send(
+		JSON.stringify({
+		  status: 200,
+		  error: null,
+		  response: "Registro atualizado com sucesso!",
+		})
+	  );
+	});
+  });
