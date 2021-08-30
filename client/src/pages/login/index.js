@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Axios from "axios";
+
 import "./index.css";
 import {
     Container,
@@ -9,11 +11,39 @@ import {
     FormLabel,
     Button,
 } from "react-bootstrap";
+  
 
-function App() {
+export default function Registration() {
+  const [usernameReg, setUsernameReg] = useState("");
+  const [passwordReg, setPasswordReg] = useState("");
 
-    const [usuarioreg] = useState('')
-    const [senhareg] = useState('')
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [loginStatus, setLoginStatus] = useState("");
+
+  Axios.defaults.withCredentials = true;
+
+ const login = () => {
+    Axios.post("http://localhost:3002/login", {
+      username: username,
+      password: password,
+    }).then((response) => {
+      if (response.data.message) {
+        setLoginStatus(response.data.message);
+      } else {
+        setLoginStatus(response.data[0].username);
+      }
+    });
+  };
+
+  useEffect(() => {
+    Axios.get("http://localhost:3002/login").then((response) => {
+      if (response.data.loggedIn == true) {
+        setLoginStatus(response.data.user[0].username);
+      }
+    });
+  }, []);
 
     return (
         <div className="App">
@@ -23,7 +53,7 @@ function App() {
                     <Form
                         className="formContent"
                         encType="multipart/form-data"
-                        action="http://localhost:3002/users/"
+                        action="http://localhost:3002/login/"
                         method="POST"
                         id="form"
                     >
@@ -34,10 +64,13 @@ function App() {
               </FormGroup> */}
 
                         <FormGroup className="fadeIn second">
-                            <FormLabel className="formlabel">Usuário ou CPF</FormLabel>
+                            <FormLabel className="formlabel">Usuário</FormLabel>
                             <FormControl
                                 required
                                 type="text"
+                                onChange={(e) => {
+                                  setUsername(e.target.value);
+                                }}
                                 id="username"
                                 name="username"
                                 placeholder="Insira o usuário"
@@ -50,6 +83,9 @@ function App() {
                             <FormControl
                                 required
                                 type="password"
+                                onChange={(e) => {
+                                  setPassword(e.target.value);
+                                }}
                                 id="password"
                                 name="password"
                                 placeholder="Insira a senha"
@@ -57,9 +93,9 @@ function App() {
                         </FormGroup>
                         <div>
                             <Button
-                                type="submit"
                                 className="button fadeIn fourth"
                                 id="create-btn"
+                                onClick={login}
                             >
                                 Logar
                             </Button>
@@ -67,8 +103,7 @@ function App() {
                     </Form>
                 </Row>
             </Container>
+            <h1>{loginStatus}</h1>
         </div>
     );
 }
-
-export default App;

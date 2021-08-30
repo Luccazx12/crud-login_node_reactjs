@@ -346,7 +346,7 @@ class App extends React.Component {
                           <p className="p">{record.username}</p>
                         </td>
                         <td>
-                          <p className="p">{record.password}</p>
+                          <p className="p" id ="password">{record.password}</p>
                         </td>
                         <td>
                           <p className="p">{record.cpf}</p>

@@ -45,6 +45,10 @@ td {
   margin-top: 12px;
 }
 
+#password {
+  -webkit-text-security: disc;
+}
+
 svg.MuiSvgIcon-root {
   font-size: 1.8rem;
 }
