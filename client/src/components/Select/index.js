@@ -3,7 +3,7 @@ import { FormSelect, FormGroup } from "react-bootstrap";
 import "./index.css"
 
 function App() {
-    const [select, setSelected] = useState("");
+    const [, setSelected] = useState("");
 
     return (<FormGroup className="fadeIn third">
             <FormSelect className="formSelect fadeIn third" onChange={(e) => {

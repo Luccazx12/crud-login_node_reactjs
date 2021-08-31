@@ -1,4 +1,4 @@
-body{
+/* body{
     font-family: 'Hind Guntur', sans-serif;
     color: #054231;
     display: flex;
@@ -8,7 +8,7 @@ body{
     background-repeat: no-repeat, no-repeat;
     background-position:  200% -40%;
     background-size: 80%; */
-  }
+  /* } */
   
   
   
@@ -44,7 +44,7 @@ body{
     display: flex;
     flex-direction: column;
     }
-  input[type="file"] {
+  .input-upload {
     display: none;
   }
   
@@ -85,7 +85,7 @@ body{
   .img-upload:hover:before{
    opacity: 1;
   }
-  img {
+  .imgphoto {
     width: auto;
     height: 100%;
   }
@@ -96,18 +96,18 @@ body{
     color: #676767;
   }
   
-  input{
+  .inputphoto{
     border-radius: 15px;
     border: 1px solid #b7b7b7;
     padding: 5px 5px 5px 10px;
     font-size: 18px;
     transition: 0.2s;
   }
-  input:focus{
+  .inputphoto:focus{
     outline: none;
     border: 1px solid #64d488;
   }
-  input::placeholder{
+  .inputphoto::placeholder{
     color: #bebebe;
   }
   .name{ 

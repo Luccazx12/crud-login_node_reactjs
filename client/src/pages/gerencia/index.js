@@ -11,8 +11,6 @@ import {
   Alert,
   Table,
 } from "react-bootstrap";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
 import { cpfMask } from "../../components/CpfMask/index.js";
 import Select from "../../components/Select/index.js";
 import NavBar from '../../components/NavBar/index.js';
