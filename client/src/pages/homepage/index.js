@@ -31,7 +31,7 @@ export default function App() {
                         id="form"
                     >
                         <h2 className="h2 fadeIn first">Solicitar reprografia</h2>
-                        <div className="selects">
+                        {/* <div className="selects">
                         <Select></Select>
 
                         <Select></Select>
@@ -39,7 +39,7 @@ export default function App() {
                         <Select></Select>
 
                         <Select></Select>
-                        </div>
+                        </div> */}
                         <div>
                             <Button
                                 className="button fadeIn fourth"

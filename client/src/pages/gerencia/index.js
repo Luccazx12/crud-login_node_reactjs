@@ -28,6 +28,7 @@ class App extends React.Component {
       showAlert: false,
       alertMsg: "",
       alertType: "sucess",
+      loading: false,
     };
   }
 
@@ -59,13 +60,20 @@ class App extends React.Component {
     headers.append("Content-Type", "application/json");
     fetch("http://localhost:3002/users/", {
       method: "GET",
+      // headers: { acessToken: sessionStorage.getItem("acessToken") },
       headers: headers,
     })
       .then((response) => response.json())
       .then((result) => {
+        if (result.error) {
+          this.setState({
+            loading: true,
+          })
+        }
         console.log("result", result);
         this.setState({
           records: result.response,
+
         });
       })
       .catch((error) => {
@@ -275,7 +283,6 @@ class App extends React.Component {
 
               <Form.Group className="mb-3">
                 <Form.Control size="sm"
-                  required
                   accept="image/*"
                   type="file"
                   className="fadeIn fourth"
@@ -325,30 +332,18 @@ class App extends React.Component {
               <Table responsive hover size="sm" striped className="table">
                 <thead>
                   <tr>
+                    <th scope="col">FOTO</th>
                     <th scope="col">USUÁRIO</th>
                     <th scope="col">SENHA</th>
                     <th scope="col">CPF</th>
                     <th scope="col">DEPARTAMENTO</th>
-                    <th scope="col">FOTO</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {this.state.records.map((record) => {
+                  {this.state.loading ? <div>Loading...</div> : this.state.records.map((record) => {
                     return (
                       <tr key={record.id}
                         onClick={() => this.editRecord(record.id)}>
-                        <td>
-                          <p className="p">{record.username}</p>
-                        </td>
-                        <td>
-                          <p className="p" id="password">{record.password}</p>
-                        </td>
-                        <td>
-                          <p className="p">{record.cpf}</p>
-                        </td>
-                        <td>
-                          <p className="p">{record.departament}</p>
-                        </td>
                         <td>
                           <div className="divimg">
                             <a
@@ -367,9 +362,22 @@ class App extends React.Component {
                             </a>
                           </div>
                         </td>
+                        <td>
+                          <p className="p">{record.username}</p>
+                        </td>
+                        <td>
+                          <p className="p" id="password">{record.password}</p>
+                        </td>
+                        <td>
+                          <p className="p">{record.cpf}</p>
+                        </td>
+                        <td>
+                          <p className="p">{record.departament}</p>
+                        </td>
                       </tr>
                     );
-                  })}
+                  })
+                  }
                 </tbody>
               </Table>
             </div>

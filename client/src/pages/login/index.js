@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import NavBar from '../../components/NavBar/';
+// import { Redirect, Route } from "react-router";
+// import Gerencia from '../gerencia'
 
 import "./index.css";
 import {
@@ -27,15 +29,20 @@ export default function App() {
       username: username,
       password: password,
     }).then((response) => {
-      if (response.data.message) {
-        setLoginStatus(response.data.message);
-      } else {
-        setLoginStatus(response.data[0].username);
+      if (response.data.error) {
+        alert(response.data.error)
       }
+      else {
+        sessionStorage.setItem("accessToken", response.data)
+      }
+      // else {
+      //   setLoginStatus(response.data[0].username);
+      // }
     });
   };
 
   useEffect(() => {
+    console.log(loginStatus)
     Axios.get("http://localhost:3002/login").then((response) => {
       if (response.data.loggedIn === true) {
         setLoginStatus(response.data.user[0].username);
@@ -45,6 +52,16 @@ export default function App() {
 
     return (
         <div className="App">
+      {/* <Route
+            render={() => {
+                if (loggedIn) {
+                    return <Redirect to="/home" />;
+                }
+                else{ 
+                  }
+                
+            }}
+        /> */}
             <NavBar />
             <Container className="wrapper fadeinDown">
                 {/* Insert Form */}

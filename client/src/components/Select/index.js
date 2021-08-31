@@ -9,7 +9,7 @@ function App() {
             <FormSelect className="formSelect fadeIn third" onChange={(e) => {
                 const select = e.target.value;
                 setSelected(select);
-            }} aria-label="Default select example" id="select" name="select">
+            }} aria-label="Default select example" id="select" name="select" required>
                 <option>Escolha um departamento</option>
                 <option value="x">Departamento x</option>
                 <option value="y">Departamento y</option>

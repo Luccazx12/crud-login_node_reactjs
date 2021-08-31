@@ -9,65 +9,36 @@ const session = require("express-session");
 const port = 3002;
 
 const bcrypt = require('bcrypt');
+const { validateToken } = require("./middlewares/AuthMiddleware")
 const saltRounds = 10;
 
 const multer = require('multer');
+const { request } = require('express');
+const { sign } = require('jsonwebtoken')
 
 const app = express();
 
 app.use(express.json());
 app.use(
-  cors({
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-})
+	cors({
+		origin: ["http://localhost:3000"],
+		methods: ["GET", "POST", "PUT", "DELETE"],
+		credentials: true,
+	})
 );
 
 app.use(cookieParser());
 app.use(
 	session({
-	  key: "userId",
-	  secret: "subscribe",
-	  resave: false,
-	  saveUninitialized: false,
-	  cookie: {
-		expires: 60 * 60 * 24,
-	  },
+		key: "userId",
+		secret: "subscribe",
+		resave: false,
+		saveUninitialized: false,
+		cookie: {
+			expires: 60 * 60 * 24,
+		},
 	})
-  );
-
-// Validador de CPF
-// const { cpf } = require('cpf-cnpj-validator');
-// const { validator } = require('cpf-cnpj-validator');
-// const Joi = require('@hapi/joi').extend(validator)
-
-
-// //CPF VALIDATOR ---------------------
-// // gera um número de cpf
-// const num = cpf.generate();
-// // #=> 25634428777
-
-// // verifica se é um número válido
-// cpf.isValid(num);
-// // #=> true
-
-// // formata o número gerado
-// cpf.format(num);
-// // #=> 256.344.287-77
-
-// const cnpjSchema = Joi.document().cnpj();
-// const cpfSchema = Joi.document().cpf();
-
-// // valida o CPF
-// cpfSchema.validate('54271113107');
-// // #=> true
-
-// // valida o CNPJ
-// cnpjSchema.validate('38313108000107');
-// // #=> true
-
-
+);
 
 //UPLOAD DE IMAGENS
 const storage = multer.diskStorage({
@@ -125,41 +96,45 @@ conn.connect((err) => {
 //Rotas Login
 app.get("/login", (req, res) => {
 	if (req.session.user) {
-	  res.send({ loggedIn: true, user: req.session.user });
+		res.send({ loggedIn: true, user: req.session.user });
 	} else {
-	  res.send({ loggedIn: false });
+		res.send({ loggedIn: false });
 	}
-  });
-  
-  app.post("/login", (req, res) => {
+});
+
+app.post("/login", (req, res) => {
 	let username = req.body.username;
 	let password = req.body.password;
-  
+
 	conn.query(
-	  "SELECT * FROM users WHERE username = ?;",
-	  username,
-	  (err, result) => {
-		if (err) {
-		  res.send({ err: err });
-		}
-  
-		if (result.length > 0) {
-		  bcrypt.compare(password, result[0].password, (error, response) => {
-			if (response) {
-			  req.session.user = result;
-			  console.log(req.session.user);
-			  res.send(result);
-			} else {
-			  res.send({ message: "Wrong username/password combination!" });
+		"SELECT * FROM users WHERE username = ?;",
+		username,
+		(err, result) => {
+			if (err) {
+				res.send({ err: err });
 			}
-		  });
-		} else {
-		  res.send({ message: "User doesn't exist" });
+			if (result.length > 0) {
+				bcrypt.compare(password, result[0].password, (error, response) => {
+					if (response) {
+						const acessToken = sign({ username: username, id: result[0].id },
+							"importantsecret"
+						);
+						res.send(acessToken)
+						req.session.user = result;
+						console.log(req.session.user);
+						// res.send(result);
+					} else {
+						res.send({ error: "Wrong username/password combination!" });
+					}
+				});
+			} else {
+				res.send({ error: "User doesn't exist" });
+			}
+
 		}
-	  }
 	);
-  });
-  
+});
+
 
 
 
@@ -172,28 +147,33 @@ router.post("/users", upload.single('imagem_cliente'), (req, res, next) => {
 	let password = req.body.password;
 	let cpf = req.body.cpf;
 	let select = req.body.select;
-	const imagem = req.file.path;
+	let imagem = 'uploads/default/usuario.png';
+	if (req.file) {
+		imagem = req.file.path;
+	}
+	if(select === "Escolha um departamento"){
+		select = "Nenhum"
+	}
+		bcrypt.hash(password, saltRounds, (err, hash) => {
 
-	bcrypt.hash(password, saltRounds, (err, hash) => {
+			if (err) {
+				console.log(err)
+			}
+			const sqlInsert =
+				"INSERT INTO users (id, username, password, cpf , departament, image_user) VALUES (?, ?, ?, ?, ?, ?)";
+			conn.query(sqlInsert, [id, username, hash, cpf, select, imagem], (err, result) => {
+				if (err) console.log(err)
 
-		if (err) {
-			console.log(err)
-		}
-		const sqlInsert =
-			"INSERT INTO users (id, username, password, cpf , departament, image_user) VALUES (?, ?, ?, ?, ?, ?)";
-		conn.query(sqlInsert, [id, username, hash, cpf, select, imagem], (err, result) => {
-			if (err) console.log(err)
-
-			//   res.send(
-			// 	JSON.stringify({
-			// 	  status: 200,
-			// 	  error: null,
-			// 	  response: "New Record is Added successfully",
-			// 	})
-			//   );
-			console.log(result);
-		})
-	});
+				//   res.send(
+				// 	JSON.stringify({
+				// 	  status: 200,
+				// 	  error: null,
+				// 	  response: "New Record is Added successfully",
+				// 	})
+				//   );
+				console.log(result);
+			})
+		});
 });
 
 // show all records
@@ -213,7 +193,8 @@ router.get("/users/id/:id", (req, res) => {
 		res.send(JSON.stringify({ status: 200, error: null, response: result }));
 	});
 });
-router.get("/users/username", (req, res) => {
+
+router.get("/users/:username", (req, res) => {
 	let sql = `SELECT * FROM users WHERE username='${req.params.username}'`
 	let query = conn.query(sql, (err, result) => {
 		if (err) throw err;
@@ -261,24 +242,24 @@ router.put("/users", (req, res) => {
 		if (err) {
 			console.log(err)
 		}
-	let sql =
-		"UPDATE users SET username='" +
-		req.body.username +
-		"', password='" +
-		hash +
-		"', cpf='" +
-		req.body.cpf +
-		"' WHERE id=" +
-		req.body.id;
-	let query = conn.query(sql, (err, result) => {
-		if (err) throw err;
-		res.send(
-			JSON.stringify({
-				status: 200,
-				error: null,
-				response: "Registro atualizado com sucesso!",
-			})
-		);
+		let sql =
+			"UPDATE users SET username='" +
+			req.body.username +
+			"', password='" +
+			hash +
+			"', cpf='" +
+			req.body.cpf +
+			"' WHERE id=" +
+			req.body.id;
+		let query = conn.query(sql, (err, result) => {
+			if (err) throw err;
+			res.send(
+				JSON.stringify({
+					status: 200,
+					error: null,
+					response: "Registro atualizado com sucesso!",
+				})
+			);
+		});
 	});
-});
 });
