@@ -253,15 +253,21 @@ router.delete("/users", (req, res) => {
 
 // update the Record
 router.put("/users", (req, res) => {
+
+	let password = req.body.password;
+
+	bcrypt.hash(password, saltRounds, (err, hash) => {
+
+		if (err) {
+			console.log(err)
+		}
 	let sql =
 		"UPDATE users SET username='" +
 		req.body.username +
 		"', password='" +
-		req.body.password +
+		hash +
 		"', cpf='" +
 		req.body.cpf +
-		"', departament='" +
-		req.body.select +
 		"' WHERE id=" +
 		req.body.id;
 	let query = conn.query(sql, (err, result) => {
@@ -274,4 +280,5 @@ router.put("/users", (req, res) => {
 			})
 		);
 	});
+});
 });

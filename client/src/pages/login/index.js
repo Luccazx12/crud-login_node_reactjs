@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
+import NavBar from '../../components/NavBar/';
 
 import "./index.css";
 import {
@@ -36,7 +37,7 @@ export default function App() {
 
   useEffect(() => {
     Axios.get("http://localhost:3002/login").then((response) => {
-      if (response.data.loggedIn == true) {
+      if (response.data.loggedIn === true) {
         setLoginStatus(response.data.user[0].username);
       }
     });
@@ -44,9 +45,10 @@ export default function App() {
 
     return (
         <div className="App">
+            <NavBar />
             <Container className="wrapper fadeinDown">
                 {/* Insert Form */}
-                <Row>
+                <Row className="principalrow">
                     <Form
                         className="formContent"
                         encType="multipart/form-data"
@@ -75,7 +77,7 @@ export default function App() {
                             />
                         </FormGroup>
 
-                        <FormGroup>
+                        <FormGroup className="fadeIn second">
                             <FormLabel className="formlabel">Senha</FormLabel>
                             <FormControl
                                 required

@@ -16,7 +16,7 @@ td {
   width: 300px;
   padding-bottom: 0 !important;
   text-align: center;
-  word-wrap:break-word;
+  word-wrap: break-word;
 }
 
 #lastform {
@@ -47,15 +47,11 @@ td {
 
 #password {
   -webkit-text-security: disc;
+  font-size: 0.95rem;
 }
 
 svg.MuiSvgIcon-root {
   font-size: 1.8rem;
-}
-
-.row>* {
-  padding-right: 0 !important;
-  padding-left: 0 !important;
 }
 
 .divimg {
@@ -99,4 +95,9 @@ img {
 #create-btn {
   -webkit-box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
   box-shadow: 0 5px 30px 0 rgba(95, 186, 233, 0.4);
+}
+
+#rowgerencia {
+  display: flex;
+  width: 45% !important;
 }

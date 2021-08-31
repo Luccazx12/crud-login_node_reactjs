@@ -15,6 +15,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { cpfMask } from "../../components/CpfMask/index.js";
 import Select from "../../components/Select/index.js";
+import NavBar from '../../components/NavBar/index.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -32,10 +33,6 @@ class App extends React.Component {
     };
   }
 
-  handleClick = e => {
-    this.props.history.push("/perfil");
-  };
-
   handleChange = (evt) => {
     this.setState({
       [evt.target.name]: evt.target.value
@@ -48,7 +45,7 @@ class App extends React.Component {
     })
   }
 
-  handleFileUpload  = (e) => {
+  handleFileUpload = (e) => {
     const data = { ...this.state.data };
     data[e.currentTarget.name] = e.currentTarget.value;
     this.setState({ data });
@@ -86,7 +83,7 @@ class App extends React.Component {
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
-
+        this.props.history.push("/perfil/" + id);
         this.setState({
           id: id,
           update: true,
@@ -198,6 +195,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
+        <NavBar />
         <Container className="wrapper fadeinDown">
           {this.state.showAlert === true ? (
             <Alert
@@ -213,7 +211,7 @@ class App extends React.Component {
             </Alert>
           ) : null}
           {/* Insert Form */}
-          <Row>
+          <Row id="rowgerencia" className="principalrow">
             <Form
               className="formContent"
               encType="multipart/form-data"
@@ -240,7 +238,7 @@ class App extends React.Component {
                 />
               </FormGroup>
 
-              <FormGroup>
+              <FormGroup className="fadeIn second">
                 <FormLabel className="formlabel">Senha</FormLabel>
                 <FormControl
                   required
@@ -275,7 +273,7 @@ class App extends React.Component {
                 name="imagem_cliente"
               /> */}
 
-              
+
 
               <Form.Group className="mb-3">
                 <Form.Control size="sm"
@@ -284,9 +282,9 @@ class App extends React.Component {
                   type="file"
                   className="fadeIn fourth"
                   id="imagem_cliente"
-                  name="imagem_cliente" 
+                  name="imagem_cliente"
                   onChange={this.handleFileUpload}
-                  />
+                />
               </Form.Group>
 
               <Select />
@@ -334,19 +332,18 @@ class App extends React.Component {
                     <th scope="col">CPF</th>
                     <th scope="col">DEPARTAMENTO</th>
                     <th scope="col">FOTO</th>
-                    <th scope="col">EDITAR</th>
-                    <th scope="col">DELETAR</th>
                   </tr>
                 </thead>
                 <tbody>
                   {this.state.records.map((record) => {
                     return (
-                      <tr key={record.id}>
+                      <tr key={record.id}
+                        onClick={() => this.editRecord(record.id)}>
                         <td>
                           <p className="p">{record.username}</p>
                         </td>
                         <td>
-                          <p className="p" id ="password">{record.password}</p>
+                          <p className="p" id="password">{record.password}</p>
                         </td>
                         <td>
                           <p className="p">{record.cpf}</p>
@@ -371,22 +368,6 @@ class App extends React.Component {
                               />
                             </a>
                           </div>
-                        </td>
-                        <td>
-                          <a
-                            href="#!"
-                            onClick={() => this.editRecord(record.id)}
-                          >
-                            <EditIcon className="editicon">Editar</EditIcon>
-                          </a>
-                        </td>
-                        <td>
-                          <a
-                            href="#!"
-                            onClick={() => this.deleteRecord(record.id)}
-                          >
-                            <DeleteIcon className="deleteicon"></DeleteIcon>
-                          </a>
                         </td>
                       </tr>
                     );

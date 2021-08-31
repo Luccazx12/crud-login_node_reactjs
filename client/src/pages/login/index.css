@@ -1,1 +1,7 @@
-*{}
+.wrapper {
+    width: 200px;
+}
+
+.principalrow {
+    width: 40%;
+}

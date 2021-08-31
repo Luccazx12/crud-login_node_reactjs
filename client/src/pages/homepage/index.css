@@ -1,0 +1,11 @@
+#homerow {
+    width: 450px;
+}
+
+.selects {
+    display: flex;
+    height: 200px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}

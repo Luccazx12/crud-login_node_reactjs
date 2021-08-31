@@ -50,6 +50,9 @@ h2 {
   align-items: center;
 }
 
+.principalrow{
+  
+}
 
 /* FORM TYPOGRAPHY*/
 
@@ -242,6 +245,10 @@ input[type=password]:focus {
 
 
 /* OTHERS */
+.row>* {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
 
 *:focus {
   outline: none;

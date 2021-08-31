@@ -20,17 +20,3 @@ function createTable(conn){
         console.log("A tabela de usuários foi criada")
     });
 }
-
-function addRows(conn){
-    const sql = "INSERT INTO users (nome,cpf) VALUES ?";
-    const values= [
-        ['Patricia', '123456789'],
-        ['Pedro da Silva', '987654321'],
-        ['Michele Lorena', '147895623']
-    ];
-    conn.query(sql, [values], function(error, result, fields){
-        if(error) return console.log(error);
-        console.log('Adicionou registros!');
-        conn.end(); //fechar conexão
-    });
-}
