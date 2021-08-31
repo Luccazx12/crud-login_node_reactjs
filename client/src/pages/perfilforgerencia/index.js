@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NavBar from '../../components/NavBar/index.js';
 import { useParams } from "react-router-dom";
+// import Card from '../../components/profileCard/';
 // import axios from 'axios';
 
 import "./index.css";
@@ -44,7 +45,7 @@ export default function App() {
         fetchAllRecord();
     }, []);
 
-    
+
     return (
         <div className="App">
             <NavBar><div>{user.username}</div></NavBar>
