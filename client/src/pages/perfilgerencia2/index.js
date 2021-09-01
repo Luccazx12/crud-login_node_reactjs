@@ -88,6 +88,7 @@ const ImgUpload =({
          imagePreviewUrl: 'https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true',
          name:'',
          status:'',
+         records: [],
          active: 'edit'
       };
     }
@@ -122,6 +123,9 @@ const ImgUpload =({
         active: activeP,
       })
     }
+    
+
+    
     
     render() {
       const {imagePreviewUrl, 
