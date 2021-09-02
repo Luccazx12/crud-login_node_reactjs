@@ -60,14 +60,21 @@ svg.MuiSvgIcon-root {
   align-items: center;
 }
 
-img {
-  width: 40px;
+.img-gerencia {
+  width: 50px;
   height: 50px;
   padding-bottom: 0px;
   margin: 1px 0px 0px;
   -webkit-border-radius: 15px 15px 15px 15px;
-  border-radius: 15px 15px 15px 15px;
+  border-radius: 300px;
+  border: 2px solid;
+  border-color: rgb(99, 204, 131);
 }
+
+#buttonloading {
+  margin: 10px 0px 10px 0px;
+}
+
 
 #delete-btn {
   background-color: #ee6868;
@@ -100,4 +107,15 @@ img {
 #rowgerencia {
   display: flex;
   width: 45% !important;
+}
+
+.inputstatus {
+  font-size: 18px;
+  width: 180px;
+  background: transparent;
+  border: none;
+}
+
+.inputstatus:focus {
+  display: none;
 }

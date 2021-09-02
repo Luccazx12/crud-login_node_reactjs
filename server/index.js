@@ -116,12 +116,13 @@ app.post("/login", (req, res) => {
 			if (result.length > 0) {
 				bcrypt.compare(password, result[0].password, (error, response) => {
 					if (response) {
-						const acessToken = sign({ username: username, id: result[0].id },
+						const accessToken = sign(
+							{ username: result.username, id: result.id },
 							"importantsecret"
 						);
-						res.send(acessToken)
-						req.session.user = result;
-						console.log(req.session.user);
+						res.json(accessToken)
+						// req.session.user = result;
+						// res.send(req.session.user);
 						// res.send(result);
 					} else {
 						res.send({ error: "Wrong username/password combination!" });
@@ -151,33 +152,68 @@ router.post("/users", upload.single('imagem_cliente'), (req, res, next) => {
 	if (req.file) {
 		imagem = req.file.path;
 	}
-	if(select === "Escolha um departamento"){
+	if (select === "Escolha um departamento") {
 		select = "Nenhum"
 	}
-		bcrypt.hash(password, saltRounds, (err, hash) => {
+	bcrypt.hash(password, saltRounds, (err, hash) => {
 
-			if (err) {
-				console.log(err)
-			}
-			const sqlInsert =
-				"INSERT INTO users (id, username, password, cpf , departament, image_user) VALUES (?, ?, ?, ?, ?, ?)";
-			conn.query(sqlInsert, [id, username, hash, cpf, select, imagem], (err, result) => {
-				if (err) console.log(err)
+		if (err) {
+			console.log(err)
+		}
+		const sqlInsert =
+			"INSERT INTO users (id, username, password, cpf , departament, image_user) VALUES (?, ?, ?, ?, ?, ?)";
+		conn.query(sqlInsert, [id, username, hash, cpf, select, imagem], (err, result) => {
+			if (err) console.log(err)
 
-				//   res.send(
-				// 	JSON.stringify({
-				// 	  status: 200,
-				// 	  error: null,
-				// 	  response: "New Record is Added successfully",
-				// 	})
-				//   );
-				console.log(result);
-			})
-		});
+			//   res.send(
+			// 	JSON.stringify({
+			// 	  status: 200,
+			// 	  error: null,
+			// 	  response: "New Record is Added successfully",
+			// 	})
+			//   );
+			console.log(result);
+		})
+	});
+});
+
+router.post("/perfil", upload.single('imagem_cliente'), (req, res, next) => {
+	let id = req.body.id;
+	let username = req.body.username;
+	let password = req.body.password;
+	let cpf = req.body.cpf;
+	let select = req.body.select;
+	let imagem = 'uploads/default/usuario.png';
+	if (req.file) {
+		imagem = req.file.path;
+	}
+	if (select === "Escolha um departamento") {
+		select = "Nenhum"
+	}
+	bcrypt.hash(password, saltRounds, (err, hash) => {
+
+		if (err) {
+			console.log(err)
+		}
+		const sqlInsert =
+			"UPDATE users SET (id, username, password, cpf , departament, image_user) VALUES (?, ?, ?, ?, ?, ?)";
+		conn.query(sqlInsert, [id, username, hash, cpf, select, imagem], (err, result) => {
+			if (err) console.log(err)
+
+			//   res.send(
+			// 	JSON.stringify({
+			// 	  status: 200,
+			// 	  error: null,
+			// 	  response: "New Record is Added successfully",
+			// 	})
+			//   );
+			console.log(result);
+		})
+	});
 });
 
 // show all records
-router.get("/users", (req, res) => {
+router.get("/users", validateToken, (req, res) => {
 	let sql = "SELECT * FROM users;";
 	let query = conn.query(sql, (err, result) => {
 		if (err) throw err;

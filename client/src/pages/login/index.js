@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import NavBar from '../../components/NavBar/';
-// import { Redirect, Route } from "react-router";
-// import Gerencia from '../gerencia'
+import { useHistory } from "react-router";
 
 import "./index.css";
 import {
@@ -22,6 +21,8 @@ export default function App() {
 
   const [loginStatus, setLoginStatus] = useState("");
 
+  const history = useHistory();
+
   Axios.defaults.withCredentials = true;
 
  const login = () => {
@@ -34,6 +35,7 @@ export default function App() {
       }
       else {
         sessionStorage.setItem("accessToken", response.data)
+        history.push('/')
       }
       // else {
       //   setLoginStatus(response.data[0].username);
@@ -52,16 +54,6 @@ export default function App() {
 
     return (
         <div className="App">
-      {/* <Route
-            render={() => {
-                if (loggedIn) {
-                    return <Redirect to="/home" />;
-                }
-                else{ 
-                  }
-                
-            }}
-        /> */}
             <NavBar />
             <Container className="wrapper fadeinDown">
                 {/* Insert Form */}
@@ -74,11 +66,6 @@ export default function App() {
                         id="form"
                     >
                         <h2 className="h2 fadeIn first">Login</h2>
-                        {/* <FormGroup className="fadeIn first">
-                <FormLabel className="formlabel">ID</FormLabel>
-                <FormControl type="text" name="id" placeholder="Insira o ID" onChange={this.handleChange} value={this.state.id} />
-              </FormGroup> */}
-
                         <FormGroup className="fadeIn second">
                             <FormLabel className="formlabel">Usuário</FormLabel>
                             <FormControl

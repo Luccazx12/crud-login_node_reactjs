@@ -1,23 +1,44 @@
-import React from "react";
-// import Axios from "axios";
+import React, { useState } from "react";
 import NavBar from '../../components/NavBar/index.js';
-import Select from "../../components/Select/index.js";
 
 import "./index.css";
 import {
     Container,
     Row,
     Form,
-    // FormGroup,
-    // FormControl,
-    // FormLabel,
     Button,
 } from "react-bootstrap";
-  
+
 
 export default function App() {
-  
-   return (
+
+    const [mensagem, setMensagem] = useState();
+
+    const fetchteste = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        fetch("http://localhost:3002/users/", {
+            method: "GET",
+            headers: { accessToken: sessionStorage.getItem("accessToken")  }
+        }, 
+            )
+            .then((response) => response.json())
+            .then((result) => {
+                console.log("result", result);
+            })
+            .catch((error) => {
+                setMensagem("Usuário não logado")
+                console.log("error", error);
+            });
+            if(!sessionStorage.getItem("accessToken")) {
+                setMensagem("Usuário não logado")
+            }
+            else{
+                setMensagem("Reprografia solicitada com sucesso!")
+            }
+    }
+
+    return (
         <div className="App">
             <NavBar />
             <Container className="wrapper fadeinDown">
@@ -31,22 +52,17 @@ export default function App() {
                         id="form"
                     >
                         <h2 className="h2 fadeIn first">Solicitar reprografia</h2>
-                        {/* <div className="selects">
-                        <Select></Select>
-
-                        <Select></Select>
-
-                        <Select></Select>
-
-                        <Select></Select>
-                        </div> */}
                         <div>
                             <Button
+                                onClick={fetchteste}
                                 className="button fadeIn fourth"
                                 id="create-btn"
                             >
                                 Solicitar
                             </Button>
+                        </div>
+                        <div>
+                            <span>{mensagem}</span>
                         </div>
                     </Form>
                 </Row>

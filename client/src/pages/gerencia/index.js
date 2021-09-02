@@ -24,6 +24,7 @@ class App extends React.Component {
       cpf: "",
       selected: "",
       data: "",
+      status: "",
       records: [],
       showAlert: false,
       alertMsg: "",
@@ -60,20 +61,31 @@ class App extends React.Component {
     headers.append("Content-Type", "application/json");
     fetch("http://localhost:3002/users/", {
       method: "GET",
-      // headers: { acessToken: sessionStorage.getItem("acessToken") },
-      headers: headers,
+      // headers: { accessToken: sessionStorage.getItem("accessToken") },
+      headers: { accessToken: sessionStorage.getItem("accessToken"), headers }
     })
       .then((response) => response.json())
       .then((result) => {
         if (result.error) {
           this.setState({
             loading: true,
+            status: "Usuário não logado"
+          })
+        }
+        else if (result.response.length < 1) {
+          this.setState({
+            loading: true,
+            status: "Sem registros..."
+          })
+        }
+        else {
+          this.setState({
+            loading: false
           })
         }
         console.log("result", result);
         this.setState({
           records: result.response,
-
         });
       })
       .catch((error) => {
@@ -81,8 +93,30 @@ class App extends React.Component {
       });
   };
 
+  //delete all records
+  deleteRecords = () => {
+    var confirm = window.prompt(
+      'Tem certeza que deseja apagar todos os registros? Digite "SIM" para confirmar'
+    );
+    if (confirm === "SIM" || confirm === "Sim" || confirm === "sim") {
+      fetch("http://localhost:3002/users/", {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          this.setState({
+            showAlert: true,
+            alertMsg: result.response,
+            alertType: "danger",
+          });
+          this.fetchAllRecord();
+        })
+        .catch((error) => console.log("error", error));
+    }
+  };
+
   //view sigle data to edit
-  editRecord = (id) => {
+  perfilById = (id) => {
     fetch("http://localhost:3002/users/id/" + id, {
       method: "GET",
     })
@@ -191,34 +225,52 @@ class App extends React.Component {
               <Select />
 
               <div>
-                <Button
-                  className="button fadeIn fourth"
-                  id="edit-btn"
-                  onClick={this.fetchAllRecord}
-                >
-                  Ler
-                </Button>
-                {this.state.update === true ? (
-                  <Button className="button" onClick={this.updateRecord}>
-                    Atualizar
-                  </Button>
-                ) : (
+                {this.state.loading === true ? (<> </>) : (<>
                   <Button
-                    type="submit"
-                    onClick={this.submitbutton}
                     className="button fadeIn fourth"
-                    id="create-btn"
+                    id="edit-btn"
+                    onClick={this.fetchAllRecord}
                   >
-                    Registrar
+                    Ler
                   </Button>
+                </>
                 )}
-                <Button
-                  className="button fadeIn fourth"
-                  id="delete-btn"
-                  onClick={this.deleteRecords}
-                >
-                  Deletar todos
-                </Button>
+                {this.state.update === true ? (
+                  <>
+                    <Button className="button" onClick={this.updateRecord}>
+                      Atualizar
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    {this.state.loading === true ? (
+                    <>
+                    <Button id="buttonloading" className="fadeIn fourth" onClick={() => this.props.history.push('/login')}>Login</Button> <br/>
+                    <span className="fadeIn fourth">Faça Login para poder registrar um usuário</span>
+                      </>
+                      ) : (
+                      <>
+                      <Button
+                        type="submit"
+                        onClick={this.submitbutton}
+                        className="button fadeIn fourth"
+                        id="create-btn"
+                      >
+                        Registrar
+                      </Button>
+                    </>
+                    )}
+                  </>)}
+                {this.state.loading === true ? (<> </>) : (<>
+                  <Button
+                    onClick={this.deleteRecords}
+                    className="button fadeIn fourth"
+                    id="delete-btn"
+                  >
+                    Deletar Todos
+                  </Button>
+                </>
+                )}
               </div>
             </Form>
           </Row>
@@ -230,49 +282,66 @@ class App extends React.Component {
                   <tr>
                     <th scope="col">FOTO</th>
                     <th scope="col">USUÁRIO</th>
-                    <th scope="col">SENHA</th>
+                    {/* <th scope="col">SENHA</th> */}
                     <th scope="col">CPF</th>
                     <th scope="col">DEPARTAMENTO</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {this.state.loading ? <div>Loading...</div> : this.state.records.map((record) => {
-                    return (
-                      <tr key={record.id}
-                        onClick={() => this.editRecord(record.id)}>
-                        <td>
-                          <div className="divimg">
-                            <a
-                              href={
-                                "http://localhost:3002/" + record.image_user
-                              }
-                              target="_newblank"
-                            >
-                              <img
-                                src={
-                                  "http://localhost:3002/" +
-                                  record.image_user
-                                }
-                                alt="Imagem dos Clientes"
-                              />
-                            </a>
-                          </div>
-                        </td>
-                        <td>
-                          <p className="p">{record.username}</p>
-                        </td>
-                        <td>
-                          <p className="p" id="password">{record.password}</p>
-                        </td>
-                        <td>
-                          <p className="p">{record.cpf}</p>
-                        </td>
-                        <td>
-                          <p className="p">{record.departament}</p>
-                        </td>
-                      </tr>
-                    );
-                  })
+
+
+                  {this.state.loading ?
+                    <tr>
+                      <td>
+                        <input readOnly className="inputstatus" value={this.state.status}></input>
+                      </td>
+                      <td>
+                        <input readOnly className="inputstatus"></input>
+                      </td>
+                      <td>
+                        <input readOnly className="inputstatus"></input>
+                      </td>
+                      <td>
+                        <input readOnly className="inputstatus"></input>
+                      </td>
+                      <td>
+                        <input readOnly className="inputstatus"></input>
+                      </td>
+                    </tr> :
+                    this.state.records.map((record) => {
+
+                      return (
+                        <tr key={record.id}
+                          onClick={() => this.perfilById(record.id)}>
+                          <td>
+                            <div className="divimg">
+                              <a
+                                href={"http://localhost:3002/" + record.image_user}
+                                target="_newblank"
+                              >
+                                <img
+                                  className="img-gerencia"
+                                  src={"http://localhost:3002/" + record.image_user}
+                                  alt="Imagem dos Clientes"
+                                />
+                              </a>
+                            </div>
+                          </td>
+                          <td>
+                            <p className="p">{record.username}</p>
+                          </td>
+                          {/* <td>
+                            <p className="p" id="password">{record.password}</p>
+                          </td> */}
+                          <td>
+                            <p className="p">{record.cpf}</p>
+                          </td>
+                          <td>
+                            <p className="p">{record.departament}</p>
+                          </td>
+                        </tr>
+                      );
+                    })
                   }
                 </tbody>
               </Table>
