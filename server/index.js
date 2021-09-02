@@ -82,7 +82,7 @@ console.log('API funcionando!');
 
 const conn = mysql.createConnection({
 	host: "localhost",
-	port: 3306,
+	port: 3307,
 	user: "root",
 	database: "crud777",
 });
@@ -148,7 +148,7 @@ router.post("/users", upload.single('imagem_cliente'), (req, res, next) => {
 	let password = req.body.password;
 	let cpf = req.body.cpf;
 	let select = req.body.select;
-	let imagem = 'uploads/default/usuario.png';
+	let imagem = 'uploads/user-img/default/usuario.png';
 	if (req.file) {
 		imagem = req.file.path;
 	}

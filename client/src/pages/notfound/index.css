@@ -1,0 +1,14 @@
+
+
+#goToHome {
+    text-decoration: underline red;
+    cursor: pointer;
+}
+
+.div404 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50%;
+}
