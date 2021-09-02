@@ -26,9 +26,10 @@ class App extends React.Component {
       data: "",
       status: "",
       records: [],
-      showAlert: false,
       alertMsg: "",
       alertType: "sucess",
+      update: false,
+      showAlert: false,
       loading: false,
     };
   }
@@ -54,6 +55,8 @@ class App extends React.Component {
   componentDidMount() {
     this.fetchAllRecord();
   }
+
+
 
   // fetch all Records
   fetchAllRecord = () => {
@@ -117,8 +120,10 @@ class App extends React.Component {
 
   //view sigle data to edit
   perfilById = (id) => {
+    var headers = new Headers();
     fetch("http://localhost:3002/users/id/" + id, {
       method: "GET",
+      headers: { accessToken: sessionStorage.getItem("accessToken"), headers }
     })
       .then((response) => response.json())
       .then((result) => {
@@ -127,6 +132,7 @@ class App extends React.Component {
       })
       .catch((error) => console.log("error", error));
   };
+
 
   render() {
     return (
@@ -225,52 +231,42 @@ class App extends React.Component {
               <Select />
 
               <div>
-                {this.state.loading === true ? (<> </>) : (<>
-                  <Button
+                  <>
+                    {this.state.loading === true ? (
+                      <>
+                        <Button id="buttonloading" className="fadeIn fourth" onClick={() => this.props.history.push('/login')}>Login</Button> <br />
+                        <span className="fadeIn fourth">Faça Login para poder registrar um usuário</span>
+                      </>
+                    ) : (
+                      <>
+                       <Button
+                    onClick={this.fetchAllRecord}
                     className="button fadeIn fourth"
                     id="edit-btn"
-                    onClick={this.fetchAllRecord}
                   >
                     Ler
                   </Button>
-                </>
-                )}
-                {this.state.update === true ? (
-                  <>
-                    <Button className="button" onClick={this.updateRecord}>
-                      Atualizar
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    {this.state.loading === true ? (
-                    <>
-                    <Button id="buttonloading" className="fadeIn fourth" onClick={() => this.props.history.push('/login')}>Login</Button> <br/>
-                    <span className="fadeIn fourth">Faça Login para poder registrar um usuário</span>
-                      </>
-                      ) : (
-                      <>
-                      <Button
-                        type="submit"
-                        onClick={this.submitbutton}
-                        className="button fadeIn fourth"
-                        id="create-btn"
-                      >
-                        Registrar
-                      </Button>
-                    </>
-                    )}
-                  </>)}
-                {this.state.loading === true ? (<> </>) : (<>
-                  <Button
+
+                        <Button
+                          type="submit"
+                          // onClick={() => { this.submitForm(); setTimeout(this.fetchAllRecord(), 100000);}}
+                          className="button fadeIn fourth"
+                          id="create-btn"
+                        >
+                          Registrar
+                        </Button>
+
+                        <Button
                     onClick={this.deleteRecords}
                     className="button fadeIn fourth"
                     id="delete-btn"
                   >
                     Deletar Todos
                   </Button>
-                </>
-                )}
+                      </>
+                    )}
+                  </>
+                {/* {this.state.loading === true ? (<> </>) : (<> </>)} */}
               </div>
             </Form>
           </Row>
@@ -294,9 +290,6 @@ class App extends React.Component {
                     <tr>
                       <td>
                         <input readOnly className="inputstatus" value={this.state.status}></input>
-                      </td>
-                      <td>
-                        <input readOnly className="inputstatus"></input>
                       </td>
                       <td>
                         <input readOnly className="inputstatus"></input>

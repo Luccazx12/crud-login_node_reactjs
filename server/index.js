@@ -44,7 +44,7 @@ app.use(
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		//cb(null, './uploads/');
-		cb(null, 'uploads/');
+		cb(null, 'uploads/user-img');
 	},
 	filename: function (req, file, cb) {
 		cb(null, Date.now() + file.originalname);
@@ -177,8 +177,7 @@ router.post("/users", upload.single('imagem_cliente'), (req, res, next) => {
 	});
 });
 
-router.post("/perfil", upload.single('imagem_cliente'), (req, res, next) => {
-	let id = req.body.id;
+router.post("/users/:id", upload.single('imagem_cliente'), (req, res, next) => {
 	let username = req.body.username;
 	let password = req.body.password;
 	let cpf = req.body.cpf;
@@ -196,8 +195,8 @@ router.post("/perfil", upload.single('imagem_cliente'), (req, res, next) => {
 			console.log(err)
 		}
 		const sqlInsert =
-			"UPDATE users SET (id, username, password, cpf , departament, image_user) VALUES (?, ?, ?, ?, ?, ?)";
-		conn.query(sqlInsert, [id, username, hash, cpf, select, imagem], (err, result) => {
+			`UPDATE users SET username=${username}, password=${hash}, cpf=${cpf}, departament=${select}, image_user=${imagem} WHERE id=` + req.params.id + ""
+		conn.query(sqlInsert, (err, result) => {
 			if (err) console.log(err)
 
 			//   res.send(
@@ -255,7 +254,7 @@ router.delete("/users/id/:id", (req, res) => {
 
 //delete all records
 router.delete("/users", (req, res) => {
-	let sql = "TRUNCATE TABLE users";
+	let sql = "DELETE FROM users WHERE id > 1";
 	let query = conn.query(sql, (err, result) => {
 		if (err) throw err;
 		res.send(
