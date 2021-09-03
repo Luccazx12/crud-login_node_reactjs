@@ -48,13 +48,13 @@ export default function App() {
     <div className="App">
       <Container className="wrapper fadeinDown">
         {/* Insert Form */}
-        <Row className="principalrow">
+        <Row className="rowlogin">
           <Form
             className="formContent"
             encType="multipart/form-data"
             action="http://localhost:3002/login/"
             method="POST"
-            id="form"
+            id="formlogin"
           >
             <h2 className="h2 fadeIn first">Login</h2>
             <FormGroup className="fadeIn second">

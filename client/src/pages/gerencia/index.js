@@ -232,7 +232,7 @@ class App extends React.Component {
                   <>
                     {this.state.loading === true ? (
                       <>
-                        <Button id="buttonloading" className="fadeIn fourth" onClick={() => this.props.history.push('/login')}>Login</Button> <br />
+                        <Button type="submit" id="buttonloading" className="fadeIn fourth" >Login</Button> <br />
                         <span className="fadeIn fourth">Faça Login para poder registrar um usuário</span>
                       </>
                     ) : (
@@ -306,16 +306,11 @@ class App extends React.Component {
                           onClick={() => this.perfilById(record.id)}>
                           <td>
                             <div className="divimg">
-                              <a
-                                href={"http://localhost:3002/" + record.image_user}
-                                target="_newblank"
-                              >
                                 <img
                                   className="img-gerencia"
                                   src={"http://localhost:3002/" + record.image_user}
                                   alt="Imagem dos Clientes"
                                 />
-                              </a>
                             </div>
                           </td>
                           <td>

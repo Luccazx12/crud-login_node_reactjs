@@ -61,7 +61,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
 	storage: storage,
 	limits: {
-		fileSize: 1024 * 1024 * 5
+		fileSize: 2048 * 2048 * 5
 	},
 	fileFilter: fileFilter
 });
@@ -90,8 +90,18 @@ const conn = mysql.createConnection({
 // connect to database
 conn.connect((err) => {
 	if (err) throw err;
-	console.log("MySQL connected");
+	console.log("MySQL conectado!");
+	createTable(conn);
 });
+
+
+
+function createTable(conn){
+    const sql = 'CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER NOT NULL AUTO_INCREMENT , `username` VARCHAR(20) NOT NULL, `password` VARCHAR(255) NOT NULL, `cpf` CHAR(14) NOT NULL, `departament` VARCHAR(20), `gerencia` TINYINT(1) DEFAULT 0, `image_user` VARCHAR(255), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;';
+    conn.query(sql, function(error, result, fields){
+        if(error) return console.log(error);
+    });
+}
 
 //Rotas Login
 app.get("/login", (req, res) => {
@@ -181,10 +191,8 @@ router.post("/users", upload.single('imagem_cliente'), (req, res, next) => {
 	});
 });
 
-router.post("/users/:id", upload.single('imagem_cliente'), (req, res, next) => {
-	let username = req.body.username;
+router.post("/perfil/:id", upload.single('imagem_cliente'), (req, res, next) => {
 	let password = req.body.password;
-	let cpf = req.body.cpf;
 	let select = req.body.select;
 	let imagem = 'uploads/default/usuario.png';
 	if (req.file) {
@@ -199,7 +207,7 @@ router.post("/users/:id", upload.single('imagem_cliente'), (req, res, next) => {
 			console.log(err)
 		}
 		const sqlInsert =
-			`UPDATE users SET username=${username}, password=${hash}, cpf=${cpf}, departament=${select}, image_user=${imagem} WHERE id=` + req.params.id + ""
+		"UPDATE users SET username='" + req.body.username + "', password='" + hash + "', cpf='" + req.body.cpf + "' WHERE id=" + req.params.id;
 		conn.query(sqlInsert, (err, result) => {
 			if (err) console.log(err)
 

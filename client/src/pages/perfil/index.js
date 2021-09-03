@@ -44,6 +44,9 @@ export default function App() {
         regraGerencia();
     });
 
+    const usernameChangeHandler=e=>{
+        this.setState(e.target.value)
+    }
     const cpfMasked = (e) => {
         setCpf(cpfMask(e.target.value))
     }

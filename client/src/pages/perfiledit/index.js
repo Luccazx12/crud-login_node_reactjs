@@ -36,8 +36,13 @@ export default function App() {
     const [editStatus, setEditStatus] = useState(false);
 
     useEffect(() => {
+        fetchAllRecord();
         console.log(editStatus);
     }, []);
+
+    useEffect(() => {
+        regraGerencia();
+    });
 
     const cpfMasked = (e) => {
         setCpf(cpfMask(e.target.value))
@@ -55,18 +60,46 @@ export default function App() {
         }
     };
 
+    //fetch all records with id
+    const fetchAllRecord = () => {
+        var headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        if (id >= 1) {
+            fetch("http://localhost:3002/users/id/" + id, {
+                method: "GET",
+                headers: { accessToken: localStorage.getItem("accessToken"), headers }
+            })
+                .then((response) => response.json())
+                .then((result) => {
+                    console.log("result", result);
+                    setImgData("http://localhost:3002/" + result.response[0].image_user)
+                })
+                .catch((error) => {
+                    console.log("error", error);
+                });
+        }
+    };
+    const regraGerencia = () => {
+        if (gerencia === 0) {
+            setGerencia("não é gerente")
+        }
+        else if (gerencia === 1) {
+            setGerencia("é gerente")
+        }
+    }
+
     // update record
-    const updateRecords = (id) => {
-        Axios.post("http://localhost:3002/users/id" + id, {
+    const updateRecords = () => {
+        Axios.post(`http://localhost:3002/perfil/${id}`, {
             username: username,
             password: password,
             cpf: cpf,
             gerencia: gerencia,
             departament: departament,
-            image_user: imgData
+            image_user: picture
         })
             .then((response) => {
-                history.push(`/perfil/${id + 1}`)
+                history.push(`/perfil/${id}`)
 
                 console.log(response)
                 if (response.data.error) {
@@ -82,22 +115,7 @@ export default function App() {
             })
     };
 
-    //delete record
-    const deleteRecord = (id) => {
-        var confirm = window.confirm(
-            "Tem certeza que deseja apagar esse registro?"
-        );
-        if (confirm === true) {
-            fetch("http://localhost:3002/users/id/" + id, {
-                method: "DELETE",
-            })
-                .then((response) => response.json())
-                .then((result) => {
-                    history.push('/gerencia')
-                })
-                .catch((error) => console.log("error", error));
-        }
-    };
+
 
     return (
         <div className="App">
@@ -107,7 +125,7 @@ export default function App() {
                     <Form
                         className="formContent"
                         encType="multipart/form-data"
-                        action="http://localhost:3002/users/id/"
+                        action="http://localhost:3002/users/"
                         method="POST"
                         id="formperfil"
                     >
@@ -163,7 +181,7 @@ export default function App() {
                         <Button
                             className="button fadeIn fourth"
                             // id="confirm-btn"
-                            onClick={() => updateRecords(id)}
+                            onClick={updateRecords}
                         >
                             Confirmar
                         </Button>

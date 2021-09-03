@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import "./index.css";
 import {
@@ -7,11 +7,13 @@ import {
     Form,
     Button,
 } from "react-bootstrap";
+import { AuthContext } from "../../helpers/AuthContext";
 
 
 export default function App() {
 
     const [mensagem, setMensagem] = useState();
+    const { authState } = useContext(AuthContext);
 
     const fetchteste = () => {
         var myHeaders = new Headers();
@@ -26,11 +28,11 @@ export default function App() {
                 console.log("result", result);
             })
             .catch((error) => {
-                setMensagem("Usuário não logado")
+                setMensagem("Você não está logado!")
                 console.log("error", error);
             });
-        if (!sessionStorage.getItem("accessToken")) {
-            setMensagem("Usuário não logado")
+        if (!localStorage.getItem("accessToken")) {
+            setMensagem("Você não está logado!")
         }
         else {
             setMensagem("Reprografia solicitada com sucesso!")

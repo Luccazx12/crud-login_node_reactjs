@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import './index.css'
+import { Button } from "react-bootstrap";
 
 import Gerencia from '../pages/gerencia';
 import Login from '../pages/login';
@@ -52,27 +54,27 @@ function App() {
                 <Router>
                     <div className="navbar">
                         <div className="links">
-                            <Link to="/"> Home Page</Link>
+                            <Link to="/"> Página Inicial </Link>
                             {!authState.status && (
                                 <Link to="/login"> Login</Link>
                             )}
                             {authState.status && (
                                 <>
-                                    {gerencia ? <Link to="/gerencia"> Registration</Link> : <></>}
+                                    {gerencia ? <Link to="/gerencia"> Gerencia </Link> : <></>}
                                 </>
                             )}
 
 
                         </div>
                         <div className="loggedInContainer">
-                            <h1>{authState.username} </h1>
-                            {authState.status && <button onClick={logout}> Logout</button>}
+                            <p>{authState.username}</p>
+                            {authState.status && <Button onClick={logout}> Logout </Button>}
                         </div>
                     </div>
                     <Switch>
                         <Route path="/" exact component={HomePage} />
                         <Route path="/perfil/:id" exact component={Perfil} />
-                        <Route path="/perfil/:id/edit" exact component={ PerfilEdit} />
+                        <Route path="/perfil/:id/edit" exact component={PerfilEdit} />
                         <Route path="/gerencia" exact component={Gerencia} />
                         <Route path="/login" exact component={Login} />
                         <Route path="*" exact component={NotFound} />
