@@ -33,20 +33,15 @@ export default function App() {
     const [cpf, setCpf] = useState("");
     const [departament, setDepartament] = useState("");
     const [gerencia, setGerencia] = useState("");
-    const [editStatus, setEditStatus] = useState(false);
 
     useEffect(() => {
         fetchAllRecord();
-        console.log(editStatus);
     }, []);
 
-    useEffect(() => {
-        regraGerencia();
-    });
 
-    const cpfMasked = (e) => {
-        setCpf(cpfMask(e.target.value))
-    }
+    // const cpfMasked = (e) => {
+    //     setCpf(cpfMask(e.target.value))
+    // }
 
     const onChangePicture = e => {
         if (e.target.files[0]) {
@@ -79,14 +74,6 @@ export default function App() {
                 });
         }
     };
-    const regraGerencia = () => {
-        if (gerencia === 0) {
-            setGerencia("não é gerente")
-        }
-        else if (gerencia === 1) {
-            setGerencia("é gerente")
-        }
-    }
 
     // update record
     const updateRecords = () => {
@@ -99,15 +86,12 @@ export default function App() {
             image_user: picture
         })
             .then((response) => {
-                history.push(`/perfil/${id}`)
-
                 console.log(response)
                 if (response.data.error) {
-                    setEditStatus(false)
                     alert(response.data.error)
                 }
                 else {
-
+                    history.push(`/perfil/${id}`)
                 }
             })
             .then((result) => {
@@ -131,7 +115,7 @@ export default function App() {
                     >
                         <div className="divHeaderperfil">
                             <div className="divImgBack" onClick={() => history.push('/gerencia')}>
-                                <img className='imgBack' src={backbutton}></img>
+                                <img className='imgBack' src={backbutton} alt="Botão de voltar"></img>
                             </div>
 
                             <FormGroup className="fadeIn second">

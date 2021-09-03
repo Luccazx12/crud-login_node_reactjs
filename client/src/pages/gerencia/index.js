@@ -232,7 +232,8 @@ class App extends React.Component {
                   <>
                     {this.state.loading === true ? (
                       <>
-                        <Button type="submit" id="buttonloading" className="fadeIn fourth" >Login</Button> <br />
+                      {/* <Button type="submit" id="recovery" className="fadeIn fourth" >Registrar</Button> */}
+                        <Button id="buttonloading" className="fadeIn fourth" onClick={() => this.props.history.push('/login')}>Login</Button> <br />
                         <span className="fadeIn fourth">Faça Login para poder registrar um usuário</span>
                       </>
                     ) : (

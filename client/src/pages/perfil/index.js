@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { cpfMask } from "../../components/CpfMask/index.js";
-import Axios from 'axios';
 import backbutton from "../../images/backbutton.png";
 import {
     Container,
     Row,
-    Form,
-    FormGroup,
-    FormControl,
-    FormLabel,
     Button,
 } from "react-bootstrap";
-import Select from "../../components/Select/index.js";
 import "./index.css";
 
 
@@ -29,27 +22,18 @@ export default function App() {
     const [picture, setPicture] = useState(null);
     const [imgData, setImgData] = useState(null);
     const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
     const [cpf, setCpf] = useState("");
     const [departament, setDepartament] = useState("");
     const [gerencia, setGerencia] = useState("");
-    const [editStatus, setEditStatus] = useState(false);
 
     useEffect(() => {
         fetchAllRecord();
-        console.log(editStatus);
     }, []);
 
     useEffect(() => {
         regraGerencia();
     });
 
-    const usernameChangeHandler=e=>{
-        this.setState(e.target.value)
-    }
-    const cpfMasked = (e) => {
-        setCpf(cpfMask(e.target.value))
-    }
 
     const onChangePicture = e => {
         if (e.target.files[0]) {
@@ -95,33 +79,6 @@ export default function App() {
         }
     }
 
-    // update record
-    const updateRecords = (id) => {
-        Axios.post("http://localhost:3002/users/id" + id, {
-            username: username,
-            password: password,
-            cpf: cpf,
-            gerencia: gerencia,
-            departament: departament,
-            image_user: imgData
-        })
-            .then((response) => {
-                history.push(`/perfil/${id + 1}`)
-
-                console.log(response)
-                if (response.data.error) {
-                    setEditStatus(false)
-                    alert(response.data.error)
-                }
-                else {
-
-                }
-            })
-            .then((result) => {
-                history.push('/gerencia')
-            })
-    };
-
     //delete record
     const deleteRecord = (id) => {
         var confirm = window.confirm(
@@ -139,19 +96,6 @@ export default function App() {
         }
     };
 
-    const editRecord = () => {
-        setEditStatus(true)
-        setUsername("")
-        setCpf("")
-        setDepartament("")
-        setGerencia("")
-    }
-
-    const backButtonEdit = () => {
-        setEditStatus(false)
-        fetchAllRecord();
-    }
-
     return (
         <div className="App">
             <Container className="wrapper fadeinDown">
@@ -160,7 +104,7 @@ export default function App() {
                     <div className="formContent" id="formperfil">
                         <div className="divHeaderperfil">
                             <div className="divImgBack" onClick={() => history.push('/gerencia')}>
-                                <img className='imgBack' src={backbutton}></img>
+                                <img className='imgBack' src={backbutton} alt="Botão de voltar"></img>
                             </div>
 
                             <h2 className="fadeIn first"><span id="h2">{username}</span></h2>

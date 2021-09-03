@@ -7,13 +7,13 @@ import {
     Form,
     Button,
 } from "react-bootstrap";
-import { AuthContext } from "../../helpers/AuthContext";
+// import { AuthContext } from "../../helpers/AuthContext";
 
 
 export default function App() {
 
     const [mensagem, setMensagem] = useState();
-    const { authState } = useContext(AuthContext);
+    // const { authState } = useContext(AuthContext);
 
     const fetchteste = () => {
         var myHeaders = new Headers();
