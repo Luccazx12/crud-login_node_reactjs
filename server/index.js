@@ -106,7 +106,7 @@ app.post("/login", (req, res) => {
 	let username = req.body.username;
 	let password = req.body.password;
 
-	conn.query(
+	 conn.query(
 		"SELECT * FROM users WHERE username = ?;",
 		username,
 		(err, result) => {
@@ -120,7 +120,7 @@ app.post("/login", (req, res) => {
 							{ username: result.username, id: result.id },
 							"importantsecret"
 						);
-						res.json(accessToken)
+						res.json({ token: accessToken, username: username, id: result.id })
 						// req.session.user = result;
 						// res.send(req.session.user);
 						// res.send(result);
@@ -136,6 +136,10 @@ app.post("/login", (req, res) => {
 	);
 });
 
+
+router.get("/auth", validateToken, (req, res) => {
+	res.json();
+  });
 
 
 
@@ -221,7 +225,7 @@ router.get("/users", validateToken, (req, res) => {
 });
 
 // show a single record
-router.get("/users/id/:id", (req, res) => {
+router.get("/users/id/:id", validateToken, (req, res) => {
 	let sql = "SELECT * FROM users WHERE id=" + req.params.id;
 	let query = conn.query(sql, (err, result) => {
 		if (err) throw err;

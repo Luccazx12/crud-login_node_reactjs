@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import NavBar from '../../components/NavBar/index.js';
 
 import "./index.css";
 import {
@@ -19,9 +18,9 @@ export default function App() {
         myHeaders.append("Content-Type", "application/json");
         fetch("http://localhost:3002/users/", {
             method: "GET",
-            headers: { accessToken: sessionStorage.getItem("accessToken")  }
-        }, 
-            )
+            headers: { accessToken: localStorage.getItem("accessToken") }
+        },
+        )
             .then((response) => response.json())
             .then((result) => {
                 console.log("result", result);
@@ -30,17 +29,16 @@ export default function App() {
                 setMensagem("Usuário não logado")
                 console.log("error", error);
             });
-            if(!sessionStorage.getItem("accessToken")) {
-                setMensagem("Usuário não logado")
-            }
-            else{
-                setMensagem("Reprografia solicitada com sucesso!")
-            }
+        if (!sessionStorage.getItem("accessToken")) {
+            setMensagem("Usuário não logado")
+        }
+        else {
+            setMensagem("Reprografia solicitada com sucesso!")
+        }
     }
 
     return (
         <div className="App">
-            <NavBar />
             <Container className="wrapper fadeinDown">
                 {/* Insert Form */}
                 <Row id="homerow">

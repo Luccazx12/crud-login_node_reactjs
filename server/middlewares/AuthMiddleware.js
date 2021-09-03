@@ -7,7 +7,6 @@ const validateToken = (req, res, next) => {
 
   try {
     const validToken = verify(accessToken, "importantsecret");
-
     if (validToken) {
       return next();
     }

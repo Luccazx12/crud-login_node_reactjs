@@ -13,7 +13,6 @@ import {
 } from "react-bootstrap";
 import { cpfMask } from "../../components/CpfMask/index.js";
 import Select from "../../components/Select/index.js";
-import NavBar from '../../components/NavBar/index.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -65,7 +64,7 @@ class App extends React.Component {
     fetch("http://localhost:3002/users/", {
       method: "GET",
       // headers: { accessToken: sessionStorage.getItem("accessToken") },
-      headers: { accessToken: sessionStorage.getItem("accessToken"), headers }
+      headers: { accessToken: localStorage.getItem("accessToken"), headers }
     })
       .then((response) => response.json())
       .then((result) => {
@@ -137,7 +136,6 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <NavBar />
         <Container className="wrapper fadeinDown">
           {this.state.showAlert === true ? (
             <Alert
