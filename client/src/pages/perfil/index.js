@@ -35,18 +35,6 @@ export default function App() {
     });
 
 
-    const onChangePicture = e => {
-        if (e.target.files[0]) {
-            console.log("picture: ", e.target.files);
-            setPicture(e.target.files[0]);
-            const reader = new FileReader();
-            reader.addEventListener("load", () => {
-                setImgData(reader.result);
-            });
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    };
-
     //fetch all records with id
     const fetchAllRecord = () => {
         var headers = new Headers();
@@ -70,6 +58,7 @@ export default function App() {
                 });
         }
     };
+    
     const regraGerencia = () => {
         if (gerencia === 0) {
             setGerencia("não é gerente")
@@ -104,28 +93,21 @@ export default function App() {
                     <div className="formContent" id="formperfil">
                         <div className="divHeaderperfil">
                             <div className="divImgBack" onClick={() => history.push('/gerencia')}>
-                                <img className='imgBack' src={backbutton} alt="Botão de voltar"></img>
+                                <img className='imgBack' src={backbutton} alt="Botão deimgBack"></img>
                             </div>
-
                             <h2 className="fadeIn first"><span id="h2">{username}</span></h2>
                         </div>
 
-                        <div className="divimg-perfil">
-                            <div>
-                                <img
-                                    src={imgData}
-                                    alt="Imagem dos Clientes"
-                                    id="img-perfil"
-                                />
+                        <div className="divimg-perfil fadeIn second">
+                        <div className="img-wrap" >
+                                <img id="imgperfil-firstpage" className="imgperfil" alt="imagem de perfil" htmlFor="photo-upload" src={imgData} />
                             </div>
                         </div>
-                        <div className="divphoto">
-                            <input className="input-upload" id="profilePic" type="file" onChange={onChangePicture} />
-                        </div>
-
+                        <div className="fadeIn third">
                         <p>CPF:<span>{cpf}</span></p>
                         <p>Departamento:<span>{departament}</span></p>
                         <p>Gerencia:<span>{gerencia}</span></p>
+                        </div>
                         <div>
                             <Button
                                 className="button fadeIn fourth"

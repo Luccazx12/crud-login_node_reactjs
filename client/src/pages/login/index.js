@@ -1,9 +1,6 @@
 import React, { useState, useContext } from "react";
-import Axios from "axios";
 import { useHistory } from "react-router";
 import { AuthContext } from "../../helpers/AuthContext";
-
-import "./index.css";
 import {
   Container,
   Row,
@@ -13,7 +10,8 @@ import {
   FormLabel,
   Button,
 } from "react-bootstrap";
-
+import Axios from "axios";
+import "./index.css";
 
 export default function App() {
 
@@ -24,7 +22,8 @@ export default function App() {
 
   const history = useHistory();
 
-  const login = () => {
+  const login = (e) => {
+    e.preventDefault();
     Axios.post("http://localhost:3002/login", {
       username: username,
       password: password,
@@ -40,6 +39,7 @@ export default function App() {
           status: true,
         });
         history.push('/')
+        // window.location.reload();
       }
     });
   };
@@ -51,9 +51,7 @@ export default function App() {
         <Row className="rowlogin">
           <Form
             className="formContent"
-            encType="multipart/form-data"
-            action="http://localhost:3002/login/"
-            method="POST"
+            onSubmit={login}
             id="formlogin"
           >
             <h2 className="h2 fadeIn first">Login</h2>
@@ -87,9 +85,10 @@ export default function App() {
             </FormGroup>
             <div>
               <Button
+                type="submit"
                 className="button fadeIn fourth"
                 id="create-btn"
-                onClick={login}
+                // onClick={login}
               >
                 Logar
               </Button>

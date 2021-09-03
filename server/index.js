@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 
-const port = 3002;
+const PORT = 3002;
 
 const bcrypt = require('bcrypt');
 const { validateToken } = require("./middlewares/AuthMiddleware")
@@ -76,10 +76,6 @@ router.get('/', (req, res) => res.json({ message: 'funcionando' }));
 app.use('/', router);
 app.use('/uploads', express.static('uploads'));
 
-//iniciar o servidor
-app.listen(port);
-console.log('API funcionando!');
-
 const conn = mysql.createConnection({
 	host: "localhost",
 	port: 3306,
@@ -116,7 +112,7 @@ app.post("/login", (req, res) => {
 	let username = req.body.username;
 	let password = req.body.password;
 
-	 conn.query(
+	seila = conn.query(
 		"SELECT * FROM users WHERE username = ?;",
 		username,
 		(err, result) => {
@@ -130,7 +126,7 @@ app.post("/login", (req, res) => {
 							{ username: result.username, id: result.id },
 							"importantsecret"
 						);
-						res.json({ token: accessToken, username: username, id: result.id })
+						 res.send({ token: accessToken, username: username, id: result.id })
 						// req.session.user = result;
 						// res.send(req.session.user);
 						// res.send(result);
@@ -148,7 +144,7 @@ app.post("/login", (req, res) => {
 
 
 router.get("/auth", validateToken, (req, res) => {
-	res.json();
+	res.json(req.seila);
   });
 
 
@@ -310,3 +306,9 @@ router.put("/users", (req, res) => {
 		});
 	});
 });
+
+//iniciar o servidor
+app.listen(process.env.PORT || PORT, () => {
+	console.log(`Server running on port ${PORT}`)
+} );
+console.log('API funcionando!');

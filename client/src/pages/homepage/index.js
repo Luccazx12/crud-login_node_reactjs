@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 
 import "./index.css";
 import {
@@ -16,8 +16,6 @@ export default function App() {
     // const { authState } = useContext(AuthContext);
 
     const fetchteste = () => {
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
         fetch("http://localhost:3002/users/", {
             method: "GET",
             headers: { accessToken: localStorage.getItem("accessToken") }

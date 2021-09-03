@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { FormSelect, FormGroup } from "react-bootstrap";
 import "./index.css"
 
-function App() {
+export default function Select() {
     const [, setSelected] = useState("");
 
-    return (<FormGroup className="fadeIn third">
+    return (
+        <FormGroup className="fadeIn third">
             <FormSelect className="formSelect fadeIn third" onChange={(e) => {
                 const select = e.target.value;
                 setSelected(select);
@@ -15,8 +16,6 @@ function App() {
                 <option value="y">Departamento y</option>
                 <option value="z">Departamento z</option>
             </FormSelect>
-            </FormGroup>
+        </FormGroup>
     );
 }
-
-export default App;

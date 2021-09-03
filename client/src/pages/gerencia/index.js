@@ -1,5 +1,6 @@
 import React from "react";
-import "./index.css";
+import { CpfMask } from "../../components/CpfMask/index.js";
+import Select from "../../components/Select/index.js";
 import {
   Container,
   Row,
@@ -11,8 +12,7 @@ import {
   Alert,
   Table,
 } from "react-bootstrap";
-import { cpfMask } from "../../components/CpfMask/index.js";
-import Select from "../../components/Select/index.js";
+import "./index.css";
 
 class App extends React.Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class App extends React.Component {
 
   cpfMask = (evt) => {
     this.setState({
-      cpf: cpfMask(evt.target.value)
+      cpf: CpfMask(evt.target.value)
     })
   }
 
@@ -54,8 +54,6 @@ class App extends React.Component {
   componentDidMount() {
     this.fetchAllRecord();
   }
-
-
 
   // fetch all Records
   fetchAllRecord = () => {
@@ -122,7 +120,7 @@ class App extends React.Component {
     var headers = new Headers();
     fetch("http://localhost:3002/users/id/" + id, {
       method: "GET",
-      headers: { accessToken: sessionStorage.getItem("accessToken"), headers }
+      headers: { accessToken: localStorage.getItem("accessToken"), headers }
     })
       .then((response) => response.json())
       .then((result) => {
@@ -160,11 +158,6 @@ class App extends React.Component {
               id="form"
             >
               <h2 className="h2 fadeIn first">Registrar Usuários</h2>
-              {/* <FormGroup className="fadeIn first">
-                <FormLabel className="formlabel">ID</FormLabel>
-                <FormControl type="text" name="id" placeholder="Insira o ID" onChange={this.handleChange} value={this.state.id} />
-              </FormGroup> */}
-
               <FormGroup className="fadeIn second">
                 <FormLabel className="formlabel">Usuário</FormLabel>
                 <FormControl
@@ -205,16 +198,6 @@ class App extends React.Component {
 
                 />
               </FormGroup>
-              {/* <input
-                required
-                type="file"
-                className="fadeIn fourth"
-                id="imagem_cliente"
-                name="imagem_cliente"
-              /> */}
-
-
-
               <Form.Group className="mb-3">
                 <Form.Control size="sm"
                   accept="image/*"
@@ -229,42 +212,42 @@ class App extends React.Component {
               <Select />
 
               <div>
-                  <>
-                    {this.state.loading === true ? (
-                      <>
-                      {/* <Button type="submit" id="recovery" className="fadeIn fourth" >Registrar</Button> */}
-                        <Button id="buttonloading" className="fadeIn fourth" onClick={() => this.props.history.push('/login')}>Login</Button> <br />
-                        <span className="fadeIn fourth">Faça Login para poder registrar um usuário</span>
-                      </>
-                    ) : (
-                      <>
-                       <Button
-                    onClick={this.fetchAllRecord}
-                    className="button fadeIn fourth"
-                    id="edit-btn"
-                  >
-                    Ler
-                  </Button>
+                <>
+                  {this.state.loading === true ? (
+                    <>
+                      <Button type="submit" id="recovery" className="fadeIn fourth" >Registrar</Button>
+                      <Button id="buttonloading" className="fadeIn fourth" onClick={() => this.props.history.push('/login')}>Login</Button> <br />
+                      <span className="fadeIn fourth">Faça Login para poder registrar um usuário</span>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        onClick={this.fetchAllRecord}
+                        className="button fadeIn fourth"
+                        id="edit-btn"
+                      >
+                        Ler
+                      </Button>
 
-                        <Button
-                          type="submit"
-                          // onClick={() => { this.submitForm(); setTimeout(this.fetchAllRecord(), 100000);}}
-                          className="button fadeIn fourth"
-                          id="create-btn"
-                        >
-                          Registrar
-                        </Button>
+                      <Button
+                        type="submit"
+                        // onClick={() => { this.submitForm(); setTimeout(this.fetchAllRecord(), 100000);}}
+                        className="button fadeIn fourth"
+                        id="create-btn"
+                      >
+                        Registrar
+                      </Button>
 
-                        <Button
-                    onClick={this.deleteRecords}
-                    className="button fadeIn fourth"
-                    id="delete-btn"
-                  >
-                    Deletar Todos
-                  </Button>
-                      </>
-                    )}
-                  </>
+                      <Button
+                        onClick={this.deleteRecords}
+                        className="button fadeIn fourth"
+                        id="delete-btn"
+                      >
+                        Deletar Todos
+                      </Button>
+                    </>
+                  )}
+                </>
                 {/* {this.state.loading === true ? (<> </>) : (<> </>)} */}
               </div>
             </Form>
@@ -307,11 +290,11 @@ class App extends React.Component {
                           onClick={() => this.perfilById(record.id)}>
                           <td>
                             <div className="divimg">
-                                <img
-                                  className="img-gerencia"
-                                  src={"http://localhost:3002/" + record.image_user}
-                                  alt="Imagem dos Clientes"
-                                />
+                              <img
+                                className="img-gerencia"
+                                src={"http://localhost:3002/" + record.image_user}
+                                alt="Imagem dos Clientes"
+                              />
                             </div>
                           </td>
                           <td>

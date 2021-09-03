@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const connection = mysql.createConnection({
     host: '127.0.0.1',
-    port: 3307, 
+    port: 3306, 
     user: 'root',
     database: 'crud777'
 });
@@ -10,7 +10,7 @@ connection.connect(function(err) {
     if(err) return console.log(err);
     console.log('conectou!');
     createTable(connection);
-    addRows(connection);
+    // addRows(connection);
 });
 
 function createTable(conn){
@@ -20,11 +20,11 @@ function createTable(conn){
         console.log("A tabela de usuários foi criada")
     });
 }
-function addRows(conn){
-    const sql = "INSERT INTO users (id, username, password, cpf , departament, image_user) VALUES (NULL, 'admin', 'admin', '123.123.123-12', 'Nenhum', 'uploads/user-img/default/usuario.png');"
-    conn.query(sql, function(error, result, fields){
-        if(error) return console.log(error);
-        console.log("Adicionado registro ADMIN!")
-    });
-}
+// function addRows(conn){
+//     const sql = "INSERT INTO users (id, username, password, cpf , departament, image_user) VALUES (NULL, 'admin', 'admin', '123.123.123-12', 'Nenhum', 'uploads/user-img/default/usuario.png');"
+//     conn.query(sql, function(error, result, fields){
+//         if(error) return console.log(error);
+//         console.log("Adicionado registro ADMIN!")
+//     });
+// }
 

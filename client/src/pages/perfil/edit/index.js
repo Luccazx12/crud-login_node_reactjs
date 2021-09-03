@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { cpfMask } from "../../components/CpfMask/index.js";
+// import { cpfMask } from "../../components/CpfMask/index.js";
 import Axios from 'axios';
-import backbutton from "../../images/backbutton.png";
+import backbutton from "../../../images/backbutton.png";
 import {
     Container,
     Row,
@@ -12,8 +12,8 @@ import {
     FormLabel,
     Button,
 } from "react-bootstrap";
-import Select from "../../components/Select/index.js";
-import "./index.css";
+import Select from "../../../components/Select/index.js";
+import "./index.css"
 
 
 export default function App() {
@@ -114,13 +114,14 @@ export default function App() {
                         id="formperfil"
                     >
                         <div className="divHeaderperfil">
-                            <div className="divImgBack" onClick={() => history.push('/gerencia')}>
+                            <div className="divImgBack" onClick={() => history.push(`/perfil/${id}`)}>
                                 <img className='imgBack' src={backbutton} alt="Botão de voltar"></img>
                             </div>
 
                             <FormGroup className="fadeIn second">
                                 <FormLabel className="formlabel">Usuário</FormLabel>
                                 <FormControl
+                                className="inputphoto"
                                     required
                                     type="text"
                                     id="username"
@@ -132,9 +133,9 @@ export default function App() {
 
 
 
-                        <label htmlFor="photo-upload" className="custom-file-upload fas">
+                        <label htmlFor="photo-upload" className="custom-file-upload fadeIn second">
                             <div className="img-wrap img-upload" >
-                                <img className="imgphoto" alt="imagem de perfil" htmlFor="photo-upload" src={imgData} />
+                                <img className="imgperfil" alt="imagem de perfil" htmlFor="photo-upload" src={imgData} />
                             </div>
                             <input className='input-upload' id="photo-upload" type="file" onChange={onChangePicture} />
                         </label>
