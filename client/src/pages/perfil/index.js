@@ -12,8 +12,8 @@ import {
     FormControl,
     FormLabel,
     Button,
-  } from "react-bootstrap";
-  import Select from "../../components/Select/index.js";
+} from "react-bootstrap";
+import Select from "../../components/Select/index.js";
 import "./index.css";
 
 
@@ -103,16 +103,16 @@ export default function App() {
             departament: departament,
             image_user: imgData
         })
-        .then((response) => {
-                history.push(`/perfil/${id+1}`)
-     
+            .then((response) => {
+                history.push(`/perfil/${id + 1}`)
+
                 console.log(response)
                 if (response.data.error) {
                     setEditStatus(false)
                     alert(response.data.error)
                 }
                 else {
-                   
+
                 }
             })
             .then((result) => {
@@ -231,7 +231,7 @@ export default function App() {
                                         <img className='imgBack' src={backbutton}></img>
                                     </div>
 
-                                    <h2 className="h2 fadeIn first"><span>{username}</span></h2>
+                                    <h2 className="fadeIn first"><span id="h2">{username}</span></h2>
                                 </div>
 
                                 <div className="divimg-perfil">
@@ -258,8 +258,6 @@ export default function App() {
                                     >
                                         Editar
                                     </Button>
-                                </div>
-                                <div>
                                     <Button
                                         className="button fadeIn fourth"
                                         id="delete-btn"

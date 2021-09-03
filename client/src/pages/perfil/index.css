@@ -1,10 +1,14 @@
 #formperfil{
-    width: 400px;
-    height: 580px !important;
-    padding: 20px 10px 20px 10px;
+    width: 350px;
+    height: 540px;
+    padding: 30px 10px 40px 10px;
   }
 .perfilrow{
-  height: 520px;
+  height: 530px;
+}
+#h2{
+  color: black;
+  margin-left: 85px;
 }
 
 #formperfil:hover #img-perfil {
@@ -14,12 +18,11 @@
 
 .divimg-perfil {
     width: 400px;
-    height: 400px;
+    margin-bottom: 25px;
 }
 #img-perfil {
     border: solid 6px transparent;
-    width: 60%;
-    height: 60%;
+    width: 55%;
     border-radius: 150px;
     border: 1px solid #b7b7b7;
     font-size: 18px;
@@ -27,39 +30,12 @@
     pointer-events: none;
 }
 
-
-.card{
-    width: 310px;
-    height: 627px;
-    padding: 15px;
-    margin-top: 40px;
-    border-radius: 25px;
-    display: flex;
-    justify-content: center;
-    box-shadow: 15px 10px 25px 0px  #3fa1a9;
-    background: #fff;
-    background-image: url('https://github.com/OlgaKoplik/CodePen/blob/master/leaf2.png?raw=true'), url('https://github.com/OlgaKoplik/CodePen/blob/master/leaf.png?raw=true');
-    background-repeat: no-repeat, no-repeat;
-    background-position: 120% -5%, 200% -40%;
-    background-size: 40%, 80%;
-    animation: open .5s;
-  }
-  @keyframes open {
-    0%  {background-position: 166% -25%, 220% -69%;}
-    100%{background-position: 120% -5%, 200% -40%;}
-  }
-  /* form{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  } */
-  
   .field{
     margin: 5px;
     display: flex;
     flex-direction: column;
     }
+
   .input-upload {
     display: none;
   }
@@ -203,7 +179,6 @@
     -webkit-border-radius: 15px 15px 15px 15px;
     border-radius: 300px;
     padding: 0px 0px 0px 0px;
-    margin: 0px 100px 0px 10px;
   }
   
   .imgBack {

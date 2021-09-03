@@ -1,0 +1,30 @@
+server {
+    listen 80 default_server;
+
+    server_name 1.2.3.4;
+
+    location / {
+        return 410;  # Default root of site won't exist.
+    }
+
+    location /crudclientes/ {
+        alias /var/www/html;
+        try_files $uri $uri/ =404;
+
+        # any additional configuration for non-static content
+    }
+
+    location /crudbd/ {
+        alias /var/www/html-bd;
+        try_files $uri $uri/ =404;
+
+        # any additional configuration for non-static content
+    }
+
+    location /crudbe/ {
+        alias /var/www/html-backend;
+        try_files $uri $uri/ =404;
+
+        # any additional configuration for non-static content
+    }
+}

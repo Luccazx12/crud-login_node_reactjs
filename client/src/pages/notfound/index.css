@@ -1,8 +1,15 @@
-
-
 #goToHome {
     text-decoration: underline red;
     cursor: pointer;
+}
+
+.principalnotfound{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+    padding-bottom: 30px;
 }
 
 .div404 {
@@ -10,5 +17,16 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    margin-top: 50%;
+}
+.divimgnotfound{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-bottom: 30px;
+}
+.imgnotfound {
+    border-radius: 100% 100% 1000px 100%;
+    /* margin-left: auto;
+    margin-right: auto; */
+    width: 350px;
 }
