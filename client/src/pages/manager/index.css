@@ -48,7 +48,6 @@ td {
 
 #password {
   -webkit-text-security: disc;
-  font-size: 0.95rem;
 }
 
 svg.MuiSvgIcon-root {
@@ -121,3 +120,23 @@ svg.MuiSvgIcon-root {
 .inputstatus:focus {
   display: none;
 }
+.formlabel .defaultmessage { display:none ;position:relative}
+.formlabel:hover .defaultmessage {display:block; position:absolute; top:180px; left: 370px;}
+
+
+.formlabel .defaultmessage{
+  width:8em;
+  color: white;
+  background: rgb(0, 128, 255);
+  border-radius:5px;
+  -webkit-border-radius: 10px 10px 10px 10px;
+  border-radius: 10px 10px 10px 10px;
+  -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+}
+
+.formlabel .defaultmessage p {
+  font-size: 20px;
+  font-weight: bolder;
+}
+

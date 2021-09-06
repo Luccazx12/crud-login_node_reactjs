@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import backbutton from "../../images/backbutton.png";
+import axios from 'axios';
 import {
     Container,
     Row,
@@ -27,38 +28,9 @@ export default function App() {
     const [gerencia, setGerencia] = useState("");
 
     useEffect(() => {
-        fetchAllRecord();
-    }, []);
-
-    useEffect(() => {
         regraGerencia();
     });
 
-
-    //fetch all records with id
-    const fetchAllRecord = () => {
-        var headers = new Headers();
-        headers.append("Content-Type", "application/json");
-        if (id >= 1) {
-            fetch("http://localhost:3002/users/id/" + id, {
-                method: "GET",
-                headers: { accessToken: localStorage.getItem("accessToken"), headers }
-            })
-                .then((response) => response.json())
-                .then((result) => {
-                    console.log("result", result);
-                    setUsername(result.response[0].username)
-                    setCpf(result.response[0].cpf)
-                    setDepartament(result.response[0].departament)
-                    setGerencia(result.response[0].gerencia)
-                    setImgData("http://localhost:3002/" + result.response[0].image_user)
-                })
-                .catch((error) => {
-                    console.log("error", error);
-                });
-        }
-    };
-    
     const regraGerencia = () => {
         if (gerencia === 0) {
             setGerencia("não é gerente")
@@ -85,6 +57,26 @@ export default function App() {
         }
     };
 
+    useEffect(() => {
+        axios
+            .get("http://localhost:3002/users/id/" + id, {
+                headers: {
+                    accessToken: localStorage.getItem("accessToken"),
+                },
+            })
+            .then((response) => {
+                console.log(response)
+                setUsername(response.data.response[0].username)
+                setCpf(response.data.response[0].cpf)
+                setDepartament(response.data.response[0].departament)
+                setGerencia(response.data.response[0].gerencia)
+                setImgData("http://localhost:3002/" + response.data.response[0].image_user)
+            })
+            .catch((error) => {
+                console.log("error", error);
+            });
+    }, []);
+
     return (
         <div className="App">
             <Container className="wrapper fadeinDown">
@@ -99,14 +91,14 @@ export default function App() {
                         </div>
 
                         <div className="divimg-perfil fadeIn second">
-                        <div className="img-wrap" >
+                            <div className="img-wrap" >
                                 <img id="imgperfil-firstpage" className="imgperfil" alt="imagem de perfil" htmlFor="photo-upload" src={imgData} />
                             </div>
                         </div>
                         <div className="fadeIn third">
-                        <p>CPF:<span>{cpf}</span></p>
-                        <p>Departamento:<span>{departament}</span></p>
-                        <p>Gerencia:<span>{gerencia}</span></p>
+                            <p>CPF:<span>{cpf}</span></p>
+                            <p>Departamento:<span>{departament}</span></p>
+                            <p>Gerencia:<span>{gerencia}</span></p>
                         </div>
                         <div>
                             <Button

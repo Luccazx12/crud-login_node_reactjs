@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Perfil from '../../index'
 
 function ChangePassword() {
   const [oldPassword, setOldPassword] = useState("");
@@ -29,7 +28,6 @@ function ChangePassword() {
 
   return (
       <>
-      <Perfil></Perfil>
     <div>
       <h1>Change Your Password</h1>
       <input

@@ -13,7 +13,6 @@ const { validateToken } = require("./middlewares/AuthMiddleware")
 const saltRounds = 10;
 
 const multer = require('multer');
-const { request } = require('express');
 const { sign } = require('jsonwebtoken')
 
 const app = express();
@@ -100,42 +99,34 @@ function createTable(conn){
 }
 
 //Rotas Login
-app.get("/login", (req, res) => {
-	if (req.session.user) {
-		res.send({ loggedIn: true, user: req.session.user });
-	} else {
-		res.send({ loggedIn: false });
-	}
-});
-
 app.post("/login", (req, res) => {
 	let username = req.body.username;
 	let password = req.body.password;
 
-	seila = conn.query(
+	conn.query(
 		"SELECT * FROM users WHERE username = ?;",
 		username,
 		(err, result) => {
 			if (err) {
-				res.send({ err: err });
+				res.json({ err: err });
 			}
 			if (result.length > 0) {
 				bcrypt.compare(password, result[0].password, (error, response) => {
 					if (response) {
 						const accessToken = sign(
-							{ username: result.username, id: result.id },
+							{ username: result[0].username, id: result[0].id, gerencia: result[0].gerencia},
 							"importantsecret"
 						);
-						 res.send({ token: accessToken, username: username, id: result.id })
+						 res.json({ token: accessToken, username: username, id: result[0].id, gerencia: result[0].gerencia })
 						// req.session.user = result;
-						// res.send(req.session.user);
-						// res.send(result);
+						// res.json(req.session.user);
+						// res.json(result);
 					} else {
-						res.send({ error: "Wrong username/password combination!" });
+						res.json({ error: "Wrong username/password combination!" });
 					}
 				});
 			} else {
-				res.send({ error: "User doesn't exist" });
+				res.json({ error: "User doesn't exist" });
 			}
 
 		}
@@ -144,7 +135,7 @@ app.post("/login", (req, res) => {
 
 
 router.get("/auth", validateToken, (req, res) => {
-	res.json(req.seila);
+	res.json(req.user);
   });
 
 
@@ -175,7 +166,7 @@ router.post("/users", upload.single('imagem_cliente'), (req, res, next) => {
 		conn.query(sqlInsert, [id, username, hash, cpf, select, imagem], (err, result) => {
 			if (err) console.log(err)
 
-			//   res.send(
+			//   res.json(
 			// 	JSON.stringify({
 			// 	  status: 200,
 			// 	  error: null,
@@ -207,7 +198,7 @@ router.post("/perfil/:id", upload.single('imagem_cliente'), (req, res, next) => 
 		conn.query(sqlInsert, (err, result) => {
 			if (err) console.log(err)
 
-			//   res.send(
+			//   res.json(
 			// 	JSON.stringify({
 			// 	  status: 200,
 			// 	  error: null,
@@ -222,7 +213,7 @@ router.post("/perfil/:id", upload.single('imagem_cliente'), (req, res, next) => 
 // show all records
 router.get("/users", validateToken, (req, res) => {
 	let sql = "SELECT * FROM users;";
-	let query = conn.query(sql, (err, result) => {
+	conn.query(sql, (err, result) => {
 		if (err) throw err;
 		res.send(JSON.stringify({ status: 200, error: null, response: result }));
 	});
@@ -233,7 +224,7 @@ router.get("/users/id/:id", validateToken, (req, res) => {
 	let sql = "SELECT * FROM users WHERE id=" + req.params.id;
 	let query = conn.query(sql, (err, result) => {
 		if (err) throw err;
-		res.send(JSON.stringify({ status: 200, error: null, response: result }));
+		res.json({ status: 200, error: null, response: result});
 	});
 });
 
@@ -241,7 +232,7 @@ router.get("/users/:username", (req, res) => {
 	let sql = `SELECT * FROM users WHERE username='${req.params.username}'`
 	let query = conn.query(sql, (err, result) => {
 		if (err) throw err;
-		res.send(JSON.stringify({ status: 200, error: null, response: result }));
+		res.json(JSON.stringify({ status: 200, error: null, response: result }));
 	});
 });
 
@@ -250,7 +241,7 @@ router.delete("/users/id/:id", (req, res) => {
 	let sql = "DELETE FROM users WHERE id=" + req.params.id + "";
 	let query = conn.query(sql, (err, result) => {
 		if (err) throw err;
-		res.send(
+		res.json(
 			JSON.stringify({
 				status: 200,
 				error: null,
@@ -265,7 +256,7 @@ router.delete("/users", (req, res) => {
 	let sql = "DELETE FROM users WHERE id > 1";
 	let query = conn.query(sql, (err, result) => {
 		if (err) throw err;
-		res.send(
+		res.json(
 			JSON.stringify({
 				status: 200,
 				error: null,
@@ -296,7 +287,7 @@ router.put("/users", (req, res) => {
 			req.body.id;
 		let query = conn.query(sql, (err, result) => {
 			if (err) throw err;
-			res.send(
+			res.json(
 				JSON.stringify({
 					status: 200,
 					error: null,

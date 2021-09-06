@@ -3,11 +3,11 @@
 }
 
 #formperfil{
-    width: 350px;
+    width: 360px;
     height: 540px;
     padding: 30px 10px 40px 10px;
   }
-#formperfil:hover #imgperfil-firstpage {
+#formperfil:hover .divimg-perfil {
     border: 6px solid; 
     border-color: #63d3a6;
   }
@@ -38,6 +38,10 @@
 
 .divimg-perfil {
     margin-bottom: 25px;
+    border: solid 6px transparent;
+    border-radius: 150px;
+    border: 1px solid #b7b7b7;
+    transition: 0.2s;
 }
 
 .img-wrap{
@@ -52,13 +56,6 @@
   width: auto;
   height: 100%;
   pointer-events: none;
-}
-
-#imgperfil-firstpage {
-    border: solid 6px transparent;
-    border-radius: 150px;
-    border: 1px solid #b7b7b7;
-    transition: 0.2s;
 }
 
 .input-upload {

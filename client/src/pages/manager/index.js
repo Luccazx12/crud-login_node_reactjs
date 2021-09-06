@@ -18,6 +18,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      email:"",
       username: "",
       password: "",
       cpf: "",
@@ -61,11 +62,12 @@ class App extends React.Component {
     headers.append("Content-Type", "application/json");
     fetch("http://localhost:3002/users/", {
       method: "GET",
-      // headers: { accessToken: sessionStorage.getItem("accessToken") },
+      // headers: { accessToken: localStorage.getItem("accessToken") },
       headers: { accessToken: localStorage.getItem("accessToken"), headers }
     })
       .then((response) => response.json())
       .then((result) => {
+        console.log(result)
         if (result.error) {
           this.setState({
             loading: true,
@@ -172,7 +174,22 @@ class App extends React.Component {
               </FormGroup>
 
               <FormGroup className="fadeIn second">
-                <FormLabel className="formlabel">Senha</FormLabel>
+                <FormLabel className="formlabel">Senha
+                <div className="defaultmessage">Valor padrão: <p>senai115</p></div>
+                </FormLabel>
+                <FormControl
+                  required
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="email@example.com"
+                  onChange={this.handleChange}
+                />
+              </FormGroup>
+
+              <FormGroup className="fadeIn second">
+                <FormLabel className="formlabel">E-mail
+                </FormLabel>
                 <FormControl
                   required
                   type="password"
@@ -180,7 +197,7 @@ class App extends React.Component {
                   name="password"
                   placeholder="Insira a senha"
                   onChange={this.handleChange}
-                  value={this.state.password}
+                  defaultValue="senai115"
                 />
               </FormGroup>
 
@@ -215,7 +232,7 @@ class App extends React.Component {
                 <>
                   {this.state.loading === true ? (
                     <>
-                      <Button type="submit" id="recovery" className="fadeIn fourth" >Registrar</Button>
+                      {/* <Button type="submit" id="recovery" className="fadeIn fourth" >Registrar</Button> */}
                       <Button id="buttonloading" className="fadeIn fourth" onClick={() => this.props.history.push('/login')}>Login</Button> <br />
                       <span className="fadeIn fourth">Faça Login para poder registrar um usuário</span>
                     </>

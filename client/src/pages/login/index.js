@@ -9,25 +9,24 @@ import {
   FormControl,
   FormLabel,
   Button,
+  Col,
+  FormCheck
 } from "react-bootstrap";
-import Axios from "axios";
+import axios from "axios";
 import "./index.css";
 
 export default function App() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  
+
   const { setAuthState } = useContext(AuthContext);
 
   const history = useHistory();
 
-  const login = (e) => {
-    e.preventDefault();
-    Axios.post("http://localhost:3002/login", {
-      username: username,
-      password: password,
-    }).then((response) => {
+  const login = () => {
+    const data = { username: username, password: password };
+    axios.post("http://localhost:3002/login", data).then((response) => {
       if (response.data.error) {
         alert(response.data.error)
       }
@@ -36,6 +35,7 @@ export default function App() {
         setAuthState({
           username: response.data.username,
           id: response.data.id,
+          gerencia: response.data.gerencia,
           status: true,
         });
         history.push('/')
@@ -51,7 +51,6 @@ export default function App() {
         <Row className="rowlogin">
           <Form
             className="formContent"
-            onSubmit={login}
             id="formlogin"
           >
             <h2 className="h2 fadeIn first">Login</h2>
@@ -83,16 +82,21 @@ export default function App() {
                 placeholder="Insira a senha"
               />
             </FormGroup>
-            <div>
+                <div>
+             <Form.Check type="checkbox" id="autoSizingCheck2"  size ="sm" label="Remember me" />
+             <p>Esqueci a senha!</p>
+             </div>
+
+             <div>
               <Button
-                type="submit"
                 className="button fadeIn fourth"
                 id="create-btn"
-                // onClick={login}
-              >
+                onClick={login}
+                >
                 Logar
               </Button>
             </div>
+
           </Form>
         </Row>
       </Container>
