@@ -5,14 +5,15 @@ import { Button } from "react-bootstrap";
 import axios from "axios";
 import './index.css'
 
-import HomePage from '../pages/homepage/';
+import HomePage from '../pages/homepage';
 import Login from '../pages/login';
 import Manager from '../pages/manager';
-import Profile from '../pages/profile/';
-import MyProfile from '../pages/myprofile/';
-import ProfileEdit from '../pages/profile/edit/';
+import Profile from '../pages/profile';
+import MyProfile from '../pages/myprofile';
+import ProfileEdit from '../pages/profile/edit';
 import ChangePassword from '../pages/myprofile/changepassword'
 import NotFound from '../pages/notfound';
+import ResetPassword from "../pages/forgotpassword";
 
 
 export default function App() {
@@ -87,6 +88,7 @@ export default function App() {
                         <Route path="/perfil/:id/edit" exact component={ ProfileEdit } />
                         <Route path="/meuperfil" exact component={ MyProfile } />
                         <Route path="/meuperfil/changepassword" exact component={ ChangePassword } />
+                        <Route path="/resetar-senha" exact component={ ResetPassword } />
                         <Route path="*" exact component={ NotFound } />
                     </Switch>
                 </Router>

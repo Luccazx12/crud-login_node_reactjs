@@ -51,7 +51,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-	if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg') {
+	if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/gif') {
 		cb(null, true);
 	} else {
 		cb(null, false);
@@ -91,11 +91,11 @@ conn.connect((err) => {
 
 
 
-function createTable(conn){
-    const sql = 'CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER NOT NULL AUTO_INCREMENT , `username` VARCHAR(20) NOT NULL, `password` VARCHAR(255) NOT NULL, `cpf` CHAR(14) NOT NULL, `departament` VARCHAR(20), `gerencia` TINYINT(1) DEFAULT 0, `image_user` VARCHAR(255), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;';
-    conn.query(sql, function(error, result, fields){
-        if(error) return console.log(error);
-    });
+function createTable(conn) {
+	const sql = ' CREATE TABLE IF NOT EXISTS `users2` (`id` INTEGER UNSIGNED NOT NULL , `username` VARCHAR(255) NOT NULL, `password` VARCHAR(255) NOT NULL, `email` VARCHAR(255) NOT NULL, `cpf` VARCHAR(255) NOT NULL, `departament` VARCHAR(255), `gerencia` TINYINT(1) DEFAULT 0, `image_user` VARCHAR(255), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;';
+	conn.query(sql, function (error, result, fields) {
+		if (error) return console.log(error);
+	});
 }
 
 //Rotas Login
@@ -114,10 +114,10 @@ app.post("/login", (req, res) => {
 				bcrypt.compare(password, result[0].password, (error, response) => {
 					if (response) {
 						const accessToken = sign(
-							{ username: result[0].username, id: result[0].id, gerencia: result[0].gerencia},
+							{ username: result[0].username, id: result[0].id, gerencia: result[0].gerencia },
 							"importantsecret"
 						);
-						 res.json({ token: accessToken, username: username, id: result[0].id, gerencia: result[0].gerencia })
+						res.json({ token: accessToken, username: username, id: result[0].id, gerencia: result[0].gerencia })
 						// req.session.user = result;
 						// res.json(req.session.user);
 						// res.json(result);
@@ -133,10 +133,25 @@ app.post("/login", (req, res) => {
 	);
 });
 
-
+//Autenticação com middleware
 router.get("/auth", validateToken, (req, res) => {
 	res.json(req.user);
-  });
+});
+
+
+
+//Esqueci a senha
+router.post("/reset-password", async (req, res) => {
+	const { email } = req.body
+
+	try {	
+		const user = await conn.query("")
+
+	} catch (error) {
+
+	}
+})
+
 
 
 
@@ -144,12 +159,13 @@ router.get("/auth", validateToken, (req, res) => {
 
 //insert a record
 router.post("/users", upload.single('imagem_cliente'), (req, res, next) => {
-	let id = req.body.id;
-	let username = req.body.username;
-	let password = req.body.password;
-	let cpf = req.body.cpf;
-	let select = req.body.select;
+	let { id, username, password, email, cpf, select, gerencia} = req.body
 	let imagem = 'uploads/user-img/default/usuario.png';
+	if (gerencia === "true") {
+		gerencia = 1
+	}else{
+		gerencia = 0
+	}
 	if (req.file) {
 		imagem = req.file.path;
 	}
@@ -162,8 +178,8 @@ router.post("/users", upload.single('imagem_cliente'), (req, res, next) => {
 			console.log(err)
 		}
 		const sqlInsert =
-			"INSERT INTO users (id, username, password, cpf , departament, image_user) VALUES (?, ?, ?, ?, ?, ?)";
-		conn.query(sqlInsert, [id, username, hash, cpf, select, imagem], (err, result) => {
+			"INSERT INTO users (id, username, password, email, cpf, departament, gerencia, image_user) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		conn.query(sqlInsert, [id, username, hash, email, cpf, select,gerencia, imagem], (err, result) => {
 			if (err) console.log(err)
 
 			//   res.json(
@@ -194,7 +210,7 @@ router.post("/perfil/:id", upload.single('imagem_cliente'), (req, res, next) => 
 			console.log(err)
 		}
 		const sqlInsert =
-		"UPDATE users SET username='" + req.body.username + "', password='" + hash + "', cpf='" + req.body.cpf + "' WHERE id=" + req.params.id;
+			"UPDATE users SET username='" + req.body.username + "', password='" + hash + "', cpf='" + req.body.cpf + "' WHERE id=" + req.params.id;
 		conn.query(sqlInsert, (err, result) => {
 			if (err) console.log(err)
 
@@ -224,7 +240,7 @@ router.get("/users/id/:id", validateToken, (req, res) => {
 	let sql = "SELECT * FROM users WHERE id=" + req.params.id;
 	let query = conn.query(sql, (err, result) => {
 		if (err) throw err;
-		res.json({ status: 200, error: null, response: result});
+		res.json({ status: 200, error: null, response: result });
 	});
 });
 
@@ -232,7 +248,7 @@ router.get("/users/:username", (req, res) => {
 	let sql = `SELECT * FROM users WHERE username='${req.params.username}'`
 	let query = conn.query(sql, (err, result) => {
 		if (err) throw err;
-		res.json(JSON.stringify({ status: 200, error: null, response: result }));
+		res.json({ status: 200, error: null, response: result });
 	});
 });
 
@@ -301,5 +317,5 @@ router.put("/users", (req, res) => {
 //iniciar o servidor
 app.listen(process.env.PORT || PORT, () => {
 	console.log(`Server running on port ${PORT}`)
-} );
+});
 console.log('API funcionando!');

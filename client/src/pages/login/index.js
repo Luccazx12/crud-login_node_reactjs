@@ -44,12 +44,18 @@ export default function App() {
     });
   };
 
+  const onSubmit = e => {
+    e.preventDefault();
+    login();
+  }
+
   return (
     <div className="App">
       <Container className="wrapper fadeinDown">
         {/* Insert Form */}
         <Row className="rowlogin">
           <Form
+            onSubmit={onSubmit}
             className="formContent"
             id="formlogin"
           >
@@ -84,14 +90,14 @@ export default function App() {
             </FormGroup>
                 <div>
              <Form.Check type="checkbox" id="autoSizingCheck2"  size ="sm" label="Remember me" />
-             <p>Esqueci a senha!</p>
+             <p onClick={() => history.push(`/resetar-senha`)}>Esqueci a senha!</p>
              </div>
 
              <div>
               <Button
+                type="submit"
                 className="button fadeIn fourth"
                 id="create-btn"
-                onClick={login}
                 >
                 Logar
               </Button>

@@ -16,15 +16,14 @@ export default function App() {
 
     const history = useHistory();
 
-    // const [user, setUser] = useState({
-    //     records: []
-    // });
-
-    const [picture, setPicture] = useState(null);
     const [imgData, setImgData] = useState(null);
+    // eslint-disable-next-line
     const [username, setUsername] = useState("");
+    // eslint-disable-next-line
     const [cpf, setCpf] = useState("");
+    // eslint-disable-next-line
     const [departament, setDepartament] = useState("");
+    // eslint-disable-next-line
     const [gerencia, setGerencia] = useState("");
 
     useEffect(() => {
@@ -75,6 +74,7 @@ export default function App() {
             .catch((error) => {
                 console.log("error", error);
             });
+            // eslint-disable-next-line
     }, []);
 
     return (

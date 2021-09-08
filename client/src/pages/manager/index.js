@@ -18,12 +18,13 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email:"",
       username: "",
       password: "",
+      email: "",
       cpf: "",
       selected: "",
       data: "",
+      gerencia: "",
       status: "",
       records: [],
       alertMsg: "",
@@ -46,6 +47,17 @@ class App extends React.Component {
     })
   }
 
+  handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+    console.log(value)
+  }
+
   handleFileUpload = (e) => {
     const data = { ...this.state.data };
     data[e.currentTarget.name] = e.currentTarget.value;
@@ -54,6 +66,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.fetchAllRecord();
+    console.log(this.state.gerencia)
   }
 
   // fetch all Records
@@ -175,20 +188,7 @@ class App extends React.Component {
 
               <FormGroup className="fadeIn second">
                 <FormLabel className="formlabel">Senha
-                <div className="defaultmessage">Valor padrão: <p>senai115</p></div>
-                </FormLabel>
-                <FormControl
-                  required
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="email@example.com"
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-
-              <FormGroup className="fadeIn second">
-                <FormLabel className="formlabel">E-mail
+                  <div className="defaultmessage">Valor padrão: <p>senai115</p></div>
                 </FormLabel>
                 <FormControl
                   required
@@ -201,7 +201,20 @@ class App extends React.Component {
                 />
               </FormGroup>
 
-              <FormGroup className="fadeIn second" id="lastform">
+              <FormGroup className="fadeIn second">
+                <FormLabel className="formlabel">Email
+                </FormLabel>
+                <FormControl
+                  required
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="email@example.com"
+                  onChange={this.handleChange}
+                />
+              </FormGroup>
+
+              <FormGroup className="fadeIn second mb-2">
                 <FormLabel className="formlabel">CPF</FormLabel>
                 <FormControl
                   required
@@ -213,8 +226,20 @@ class App extends React.Component {
                   onChange={this.cpfMask}
                   value={this.state.cpf}
 
+
                 />
               </FormGroup>
+                <Form.Group className="mb-2">
+                  <input
+                    type="checkbox"
+                    id="gerencia"
+                    name="gerencia"
+                    onChange={this.handleInputChange}
+                    checked={this.state.gerencia}
+                    value={this.state.cpf}
+                  ></input>
+                  <FormLabel className="">É gerente?</FormLabel>
+                </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Control size="sm"
                   accept="image/*"
@@ -228,7 +253,7 @@ class App extends React.Component {
 
               <Select />
 
-              <div>
+              <div className="buttonsgerencia">
                 <>
                   {this.state.loading === true ? (
                     <>

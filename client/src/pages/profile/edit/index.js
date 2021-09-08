@@ -28,10 +28,15 @@ export default function App() {
 
     const [picture, setPicture] = useState(null);
     const [imgData, setImgData] = useState(null);
+    // eslint-disable-next-line
     const [username, setUsername] = useState("");
+    // eslint-disable-next-line
     const [password, setPassword] = useState("");
+    // eslint-disable-next-line
     const [cpf, setCpf] = useState("");
+    // eslint-disable-next-line
     const [departament, setDepartament] = useState("");
+    // eslint-disable-next-line
     const [gerencia, setGerencia] = useState("");
 
     useEffect(() => {
