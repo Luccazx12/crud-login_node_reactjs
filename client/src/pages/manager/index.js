@@ -229,7 +229,7 @@ class App extends React.Component {
 
                 />
               </FormGroup>
-                <Form.Group className="mb-2">
+                <Form.Group className="fadeIn second mb-2">
                   <input
                     type="checkbox"
                     id="gerencia"
